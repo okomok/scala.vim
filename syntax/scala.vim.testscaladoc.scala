@@ -1,5 +1,14 @@
 def hello = 3 * 2
 
+// TODO FIXME XXX
+/* TODO FIXME XXX */
+
+/**
+ * {{{
+ *       // FIXME TODO XXX
+ *       /* FIXME XXX TODO */
+ * }}}
+ **/
 
 /*
  * /*i*/
@@ -186,6 +195,7 @@ class A {
  * @define THIS B
  * @define PARENT A
  * @define RESULT `i + 3`
+ * @param i $THIS
  */
 class B extends A {
 

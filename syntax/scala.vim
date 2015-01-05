@@ -37,7 +37,7 @@ syn sync minlines=200 maxlines=1000
 " ORDER MATTERS!
 
 
-" Escaping before parsing
+" Escape before parsing
 
 syn cluster scalaPreParseCluster contains=scalaUnicodeEscape,scalaUnicodeEscapeError
 
@@ -124,12 +124,21 @@ hi def link scalaWildcard Keyword
 syn cluster scalaCommentCluster contains=scalaSingleLineComment,scalaMultiLineComment
 
 " Single-line Comments (SLS 1.4)
-syn match scalaSingleLineComment "//.*"
+syn match scalaSingleLineComment "//.*" contains=@scalaCommentdocCluster
 hi def link scalaSingleLineComment Comment
 
 " Multi-line Comments (SLS 1.4) - can be nested.
-syn region scalaMultiLineComment start="/\*" end="\*/" contains=scalaMultiLineComment extend fold
+syn region scalaMultiLineComment start="/\*" end="\*/" contains=scalaMultiLineComment,@scalaCommentdocCluster extend fold
 hi def link scalaMultiLineComment scalaSingleLineComment
+
+
+" Commentdoc - obsolete or not
+
+syn cluster scalaCommentdocCluster contains=scalaTodo
+
+" Todo
+syn keyword scalaTodo TODO FIXME XXX contained
+hi def link scalaTodo Todo
 
 
 " Literals
@@ -245,13 +254,13 @@ hi def link scaladocMultiLineComment scalaMultiLineComment
 
 
 syn cluster scaladocBodyCluster contains=@scaladocNonBlockElementCluster,scaladocLeftMerginal
-syn cluster scaladocNonBlockElementCluster contains=@scaladocInlineElementCluster,scaladocCodeBlock,scaladocMultiLineComment,@scalaHtml
+syn cluster scaladocNonBlockElementCluster contains=@scaladocInlineElementCluster,scaladocCodeBlock,scaladocMultiLineComment,scaladocEscape,@scalaHtml
 
 
 " Scaladoc Inline Elements (https://wiki.scala-lang.org/display/SW/Syntax)
 
 syn cluster scaladocInlineElementCluster contains=scaladocItalic,scaladocBold,scaladocUnderline,scaladocMonospace,scaladocSuperscript,scaladocSubscript,scaladocEntityLink
-hi def link scaladocInlineElement Constant
+hi def link scaladocInlineElement SpecialComment
 syn region scaladocItalic start="''" end="''" contains=scalaMultiLineComment contained oneline keepend
 hi def link scaladocItalic scaladocInlineElement
 syn region scaladocBold start="'''" end="'''" contains=scalaMultiLineComment contained oneline keepend
@@ -279,17 +288,17 @@ syn cluster scaladocBlockElementCluster contains=scaladocListBlock,scaladocHeadi
 hi def link scaladocBlockElementCluster SpecialComment
 
 syn region scaladocHeading matchgroup=scaladocHeadingQuote start="=\+" end="=\+" contains=@scaladocNonBlockElementCluster contained keepend oneline
-hi def link scaladocHeadingQuote Delimiter
+hi def link scaladocHeadingQuote SpecialComment
 hi def link scaladocHeading scaladoc
 
 syn match scaladocListBlock "- " contained
 syn match scaladocListBlock "[A-Za-z0-9]\. " contained
-hi def link scaladocListBlock Delimiter
+hi def link scaladocListBlock SpecialComment
 
 
 " Scaladoc Code Block
 
-syn region scaladocCodeBlock matchgroup=Delimiter start="{{{" end="}}}" contains=@scaladocCodeBlockSyntaxCluster contained keepend " fold
+syn region scaladocCodeBlock matchgroup=SpecialComment start="{{{" end="}}}" contains=@scaladocCodeBlockSyntaxCluster contained keepend " fold
 syn match scaladocCodeBlockLeftMergin "^\%( *\*\)\+\%( \+\|$\)" contained
 hi def link scaladocCodeBlockLeftMergin scaladoc
 
@@ -304,10 +313,10 @@ hi def link scaladocCodeBlockMultiLineStringLiteral scalaMultiLineStringLiteral
 syn region scaladocCodeBlockProcessedMultiLineStringLiteral matchgroup=scalaAlphaId  start=~[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="""~rs=e-3 end=/""""\@!/re=e contains=@scalaProcessedStringEscapeCluster,scaladocCodeBlockLeftMergin keepend contained " fold
 hi def link scaladocCodeBlockProcessedMultiLineStringLiteral scalaProcessedMultiLineStringLiteral
 
-syn region scaladocCodeBlockMultiLineComment start="/\*" end="\*/" contains=scaladocCodeBlockMultiLineComment,scaladocCodeBlockLeftMergin extend contained keepend " fold
+syn region scaladocCodeBlockMultiLineComment start="/\*" end="\*/" contains=scaladocCodeBlockMultiLineComment,scaladocCodeBlockLeftMergin,@scalaCommentdocCluster extend contained keepend " fold
 hi def link scaladocCodeBlockMultiLineComment scalaMultiLineComment
 
-" you can't contain scaladocCodeBlockLeftMergin, which wrongly wins over scaladocLeftMerginal by the order.
+" override not to fold
 syn region scaladocCodeBlockScaladoc start="/\*\*/\@!" end="\*/" contains=@scaladocBodyCluster keepend extend contained " fold
 hi def link scaladocCodeBlockScaladoc scaladoc
 
@@ -319,7 +328,7 @@ hi def link scaladocCodeBlockBlock scalaMultiLineComment
 " Scaladoc Tags and Annotations (https://wiki.scala-lang.org/display/SW/Tags+and+Annotations)
 
 syn cluster scaladocTagCluster contains=scaladocParam,scaladocTParam,scaladocReturn,scaladocThrows,scaladocSee,scaladocNote,scaladocExample,scaladocAuthor,scaladocVersion,scaladocSince,scaladocTodo,scaladocDefine,scaladocInheritdoc
-hi def link scaladocTagCluster PreProc
+hi def link scaladocTagCluster SpecialComment
 
 syn match scaladocParam "@constructor\>" contained skipwhite
 hi def link scaladocParam scaladocTagCluster
@@ -347,13 +356,20 @@ syn match scaladocSince "@since\>" contained
 hi def link scaladocSince scaladocTagCluster
 syn match scaladocTodo "@todo\>" contained
 hi def link scaladocTodo scaladocTagCluster
-syn match scaladocDefine "@define\>" contained
+syn match scaladocDefine "@define\>" nextgroup=scaladocEscapedId contained skipwhite
 hi def link scaladocDefine scaladocTagCluster
 syn match scaladocInheritdoc "@inheritdoc\>"
 hi def link scaladocInheritdoc scaladocTagCluster
+
+" Scaladoc Escape
+syn match scaladocEscape "\$" nextgroup=scaladocEscapedId contained
+syn match scaladocEscapedId "[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" contained
+hi def link scaladocEscape SpecialComment
+hi def link scaladocEscapedId scaladoc
 
 
 " XML mode (SLS 1.5) " TODO
 
 syn region scalaXmlMode start="[ ({]<[A-Z$_a-z0-9!?]" end="$" contains=@scalaXml
 hi def link scalaXmlMode Normal
+
