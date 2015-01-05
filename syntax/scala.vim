@@ -330,7 +330,7 @@ hi def link scaladocCodeBlockBlock scalaMultiLineComment
 syn cluster scaladocTagCluster contains=scaladocParam,scaladocTParam,scaladocReturn,scaladocThrows,scaladocSee,scaladocNote,scaladocExample,scaladocAuthor,scaladocVersion,scaladocSince,scaladocTodo,scaladocDefine,scaladocInheritdoc
 hi def link scaladocTagCluster SpecialComment
 
-syn match scaladocParam "@constructor\>" contained skipwhite
+syn match scaladocParam "@constructor\>" contained 
 hi def link scaladocParam scaladocTagCluster
 syn match scaladocParam "@param\>" nextgroup=@scalaIdCluster contained skipwhite
 hi def link scaladocParam scaladocTagCluster
@@ -338,7 +338,7 @@ syn match scaladocTParam "@tparam\>" nextgroup=@scalaIdCluster contained skipwhi
 hi def link scaladocTParam scaladocTagCluster
 syn match scaladocReturn "@return\>" contained
 hi def link scaladocReturn scaladocTagCluster
-syn match scaladocThrows "@throws\>" nextgroup=@scalaIdCluster contained skipwhite
+syn match scaladocThrows "@throws\>" contained " nextgroup=scaladocTypeName contained skipwhite
 hi def link scaladocThrows scaladocTagCluster
 syn match scaladocSee "@see\>" contained
 hi def link scaladocSee scaladocTagCluster
@@ -362,10 +362,14 @@ syn match scaladocInheritdoc "@inheritdoc\>"
 hi def link scaladocInheritdoc scaladocTagCluster
 
 " Scaladoc Escape
-syn match scaladocEscape "\$" nextgroup=scaladocEscapedId contained
+syn match scaladocEscape  "\$[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" nextgroup=scaladocEscapedId contained
 syn match scaladocEscapedId "[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" contained
 hi def link scaladocEscape SpecialComment
 hi def link scaladocEscapedId scaladoc
+
+" Type? - I don't know how to parse a type followed by text.
+syn match scaladocTypeName "[^ ]\+" contained
+hi def link scaladocTypeName scalaId
 
 
 " XML mode (SLS 1.5) " TODO

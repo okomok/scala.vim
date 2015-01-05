@@ -1,3 +1,10 @@
+
+/**
+ * @throws My.T hello
+ **/
+def hello = ()
+
+
 def hello = 3 * 2
 
 // TODO FIXME XXX
