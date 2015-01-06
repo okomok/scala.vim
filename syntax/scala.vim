@@ -51,7 +51,7 @@ hi def link scalaUnicodeEscapeError Error
 " Identifiers
 
 syn cluster scalaIdCluster contains=scalaAlphaid,scalaOp,scalaReservedOp,scalaLiteralId
-hi def link scalaId Identifier
+hi def link scalaId Normal
 
 " Mixed Identifiers
 syn match scalaAlphaid "[A-Z$_a-z][A-Z$_a-z0-9]*"  nextgroup=scalaProcessedStringLiteralElement
@@ -322,10 +322,10 @@ hi def link scaladocListBlock SpecialComment
 
 " Scaladoc Code Block
 
-syn region scaladocCodeBlock matchgroup=SpecialComment start="{{{" end="}}}" contains=@scaladocPreParseCluster contained keepend " contains=@scaladocCodeBlockSyntaxCluster contained keepend " fold
+syn region scaladocCodeBlock matchgroup=SpecialComment start="{{{" end="}}}" contains=scaladocCodeBlockLeftMergin,@scaladocPreParseCluster contained keepend " contains=@scaladocCodeBlockSyntaxCluster contained keepend " fold
 syn match scaladocCodeBlockLeftMergin "^\%( *\*\)\+\%( \+\|$\)" contained
 hi def link scaladocCodeBlockLeftMergin scaladoc
-hi def link scaladocCodeBlock SpecialComment
+hi def link scaladocCodeBlock Normal
 
 " override multi-line syntax for left-mergin
 
