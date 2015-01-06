@@ -50,22 +50,25 @@ hi def link scalaUnicodeEscapeError Error
 
 " Identifiers
 
-syn cluster scalaIdCluster contains=scalaAlphaId,scalaOp,scalaReservedOp,scalaLiteralId
+syn cluster scalaIdCluster contains=scalaAlphaid,scalaOp,scalaReservedOp,scalaLiteralId
 hi def link scalaId Identifier
 
 " Mixed Identifiers
-syn match scalaAlphaId "[A-Z$_a-z][A-Z$_a-z0-9]*"
-syn match scalaAlphaId "[A-Z$_a-z][A-Z$_a-z0-9]*_" nextgroup=scalaOp
-hi def link scalaAlphaId scalaId
+syn match scalaAlphaid "[A-Z$_a-z][A-Z$_a-z0-9]*"  nextgroup=scalaProcessedStringLiteralElement
+syn match scalaAlphaid "[A-Z$_a-z][A-Z$_a-z0-9]*_" nextgroup=scalaOpInAlphaid,scalaProcessedStringLiteralElement,scalaOpInAlphaidInProcessedStringLiteral
+hi def link scalaAlphaid scalaId
 
-" Operator-only Identifiers - don't eat "//", "/*" and "\\u".
-syn match scalaOp "[!#%&*+-/:<=>?@\\^]\+\%(/\*\|//\|/\*\@=\|//\@=\|\\u\@=\)\@<!"
+" Operator-only Identifiers
+"   extended and ends immediately.
+syn region scalaOp           start="[!#%&*+-/:<=>?@\\^]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline
+syn region scalaOpInAlphaid  start="[!#%&*+-/:<=>?@\\^]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
 hi def link scalaOp scalaId
+hi link scalaOpInAlphaid scalaAlphaid
 
 " Literal Identifiers (SLS 1.1.2)
-syn region scalaLiteralIdError matchgroup=Error start ="`" end ="$" " fall back
+syn region scalaLiteralIdError matchgroup=Error start ="`" end ="$" " fallback
 syn region scalaLiteralId start="`" end="`" contains=scalaCharEscape,@scalaPreParseCluster oneline keepend
-hi def link scalaLiteralId scalaAlphaId
+hi def link scalaLiteralId scalaAlphaid
 
 
 " Operators
@@ -146,7 +149,7 @@ hi def link scalaTodo Todo
 syn cluster scalaLiteralCluster contains=@scalaSingleLineLiteralCluster,@scalaMultiLineLiteralCluster
 syn cluster scalaSingleLineLiteralCluster contains=scalaIntegerLiteral,scalaFloatingPointLiteral,scalaBooleanLiteral,
     \ scalaUnclosedCharacterLiteralError,scalaSymbolLiteral,scalaCharacterLiteral,scalaSingleLineStringLiteral,
-    \ scalaOctalEscape,scalaCharEscapeInChar,scalaNullLiteral,scalaProcessedSingleLineStringLiteral
+    \ scalaNullLiteral,scalaProcessedSingleLineStringLiteral
 syn cluster scalaMultiLineLiteralCluster contains=scalaMultiLineStringLiteral,scalaProcessedMultiLineStringLiteral
 
 " Integer Literals (SLS 1.3.1)
@@ -165,18 +168,28 @@ hi def link scalaFloatingPointLiteral Float
 syn keyword scalaBooleanLiteral true false
 hi def link scalaBooleanLiteral Keyword
 
-" fall back
+" fallback
 syn match scalaUnclosedCharacterLiteralError "'"
 hi def link scalaUnclosedCharacterLiteralError Error
 
-" Symbol Literals (SLS 1.3.7) - 'scalaAlphaId and 'scalaOp; placed before Character Literals
+
+" Symbol Literals (SLS 1.3.7) - 'scalaAlphaid and 'scalaOp; placed before Character Literals
+
+syn match scalaSymbolLiteral "'[ \\]\@!" nextgroup=scalaAlphaidInSymbolLiteral,scalaOpInSymbolLiteral
 syn match scalaSymbolLiteral "'\%(\\u\+[0-9A-Fa-f]\{4}\)\@=" " optimistic
-syn match scalaSymbolLiteral "'[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="
-syn match scalaSymbolLiteral "'[!#%&*+-/:<=>?@\\^]*\\u\@!"
-syn match scalaSymbolLiteral "'[!#%&*+-/:<=>?@\\^]*[!#%&*+-/:<=>?@^]"
-syn match scalaSymbolLiteralError "'\\u\@!" " scalac kicks for some reason.
 hi def link scalaSymbolLiteral Constant
-hi def link scalaSymbolLiteralError Error
+syn match scalaUnclosedCharacterLiteralError "'$"
+
+syn match scalaAlphaidInSymbolLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*"  contained
+syn match scalaAlphaidInSymbolLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*_" nextgroup=scalaOpInAlphaidInSymbolLiteral,@scalaCommentCluster contained
+hi link scalaAlphaidInSymbolLiteral scalaSymbolLiteral
+
+syn region scalaOpInSymbolLiteral          start="[!#%&*+-/:<=>?@\\^]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
+syn region scalaOpInAlphaidInSymbolLiteral start="[!#%&*+-/:<=>?@\\^]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
+
+hi link scalaOpInSymbolLiteral scalaSymbolLiteral
+hi link scalaOpInAlphaidInSymbolLiteral scalaSymbolLiteral
+
 
 " Character Literals (SLS 1.3.4)
 syn match scalaCharacterLiteral /'\p'/
@@ -188,50 +201,48 @@ hi def link scalaCharacterEscapeLiteral scalaCharEscape
 hi def link scalaCharacterOctalEscapeLiteral scalaCharEscape
 hi def link scalaCharacterUnicodeEscapeLiteral scalaUnicodeEscape
 
-
-" Sinlge-line String Literals (SLS 1.3.5)
-syn region scalaUnclosedStringLiteralError matchgroup=Error start =/"/ skip=/\\"/ end =/$/ " fall back
-syn region scalaSingleLineStringLiteral start=/"/ skip=/\\"/ end=/"/ contains=scalaCharEscape,@scalaPreParseCluster oneline keepend
-hi def link scalaSingleLineStringLiteral String
-
-" Multi-line String Literals (SLS 1.3.5) - shall ingore scalaCharEscape.
-syn region scalaMultiLineStringLiteral start=/"""/ end=/""""\@!/ contains=@scalaPreParseCluster keepend fold
-hi def link scalaMultiLineStringLiteral scalaSingleLineStringLiteral
+" Escape Sequences (SLS 1.3.6)
+syn match scalaCharEscape /\\[btnfr"'\\]/ contained
+hi def link scalaCharEscape SpecialChar
 
 " Null Literal 
 syn keyword scalaNullLiteral null
 hi def link scalaNullLiteral Keyword
 
+" String Literals (SLS 1.3.5)
+syn region scalaUnclosedStringLiteralError matchgroup=Error start =/"/ skip=/\\"/ end =/$/ " fallback
+syn region scalaStringLiteral start=/"/ skip=/\\"/ end=/"/ contains=@scalaPreParseCluster,scalaCharEscape keepend oneline
+syn region scalaStringLiteral start=/"""/ end=/""""\@!/    contains=@scalaPreParseCluster                 keepend fold  " shall ignore scalaCharEscape.
+hi def link scalaStringLiteral String
+
+
 " Processed String Literals (SIP-11) - shall ignore scalaCharEscape.
-"   starts with scalaAlphaId; you can't use lookbehind for some regex issue.
-syn region scalaProcessedSingleLineStringLiteral matchgroup=scalaAlphaId start=~[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="~rs=e-1
-    \ end=/"/re=e       contains=@scalaProcessedStringEscapeCluster keepend oneline
-syn region scalaProcessedMultiLineStringLiteral  matchgroup=scalaAlphaId start=~[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="""~rs=e-3
-    \ end=/""""\@!/re=e contains=@scalaProcessedStringEscapeCluster keepend fold
-hi def link scalaProcessedSingleLineStringLiteral scalaSingleLineStringLiteral
-hi def link scalaProcessedMultiLineStringLiteral scalaMultiLineStringLiteral
 
+" syn match scalaProcessedStringLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*"  nextgroup=scalaProcessedStringLiteralElement
+" syn match scalaProcessedStringLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*_" nextgroup=scalaOpInAlphaidInProcessedStringLiteral,scalaProcessedStringLiteralElement
+hi link scalaProcessedStringLiteral Error
 
-" Escapes
+syn region scalaProcessedStringLiteralElement start=/"/   end=/"/       contains=@scalaProcessedStringEscapeCluster keepend contained oneline
+syn region scalaProcessedStringLiteralElement start=/"""/ end=/""""\@!/ contains=@scalaProcessedStringEscapeCluster keepend contained fold
+hi link scalaProcessedStringLiteralElement scalaStringLiteral
 
-" Processed String Literal Escape (SIP-11)
+syn region scalaOpInAlphaidInProcessedStringLiteral start="[!#%&*+-/:<=>?@\\^]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster
+    \ nextgroup=scalaProcessedStringLiteralElement oneline contained
+hi link scalaOpInAlphaidInProcessedStringLiteral scalaId
+
 syn cluster scalaProcessedStringEscapeCluster add=scalaEscape,scalaInvalidStringInterpolationError,scalaDollarEscape,@scalaPreParseCluster
 
 syn match scalaEscape "\$" nextgroup=scalaEscapedId,scalaEscapedBlock contained
-" slightly different from scalaAlphaId for some reason
+" slightly different from scalaAlphaid for some reason
 syn match scalaEscapedId "[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" contained
 syn match scalaDollarEscape "\$\$" contained
 syn region scalaEscapedBlock matchgroup=scalaDelimiter start="{" end="}" contained contains=TOP keepend
 hi def link scalaEscape SpecialChar
 hi def link scalaDollarEscape SpecialChar
-hi def link scalaEscapedId scalaAlphaId
+hi def link scalaEscapedId scalaAlphaid
 
-syn match scalaInvalidStringInterpolationError /\$[A-Za-z$_{]\@!/ contained
+syn match scalaInvalidStringInterpolationError "\$[A-Za-z$_{]\@!" contained
 hi def link scalaInvalidStringInterpolationError Error
-
-" Escape Sequences (SLS 1.3.6)
-syn match scalaCharEscape /\\[btnfr"'\\]/ contained
-hi def link scalaCharEscape SpecialChar
 
 
 " Annotations (SLS 11.0)
@@ -311,9 +322,10 @@ hi def link scaladocListBlock SpecialComment
 
 " Scaladoc Code Block
 
-syn region scaladocCodeBlock matchgroup=SpecialComment start="{{{" end="}}}" contains=@scaladocCodeBlockSyntaxCluster contained keepend " fold
+syn region scaladocCodeBlock matchgroup=SpecialComment start="{{{" end="}}}" contains=@scaladocPreParseCluster contained keepend " contains=@scaladocCodeBlockSyntaxCluster contained keepend " fold
 syn match scaladocCodeBlockLeftMergin "^\%( *\*\)\+\%( \+\|$\)" contained
 hi def link scaladocCodeBlockLeftMergin scaladoc
+hi def link scaladocCodeBlock SpecialComment
 
 " override multi-line syntax for left-mergin
 
@@ -326,7 +338,7 @@ syn cluster scaladocCodeBlockSyntaxCluster contains=@scalaSingleLineSyntaxCluste
 syn region scaladocCodeBlockMultiLineStringLiteral start=/"""/ end=/""""\@!/ contains=@scalaPreParseCluster,scaladocCodeBlockLeftMergin,scaladocPreParseCluster keepend contained " fold
 hi def link scaladocCodeBlockMultiLineStringLiteral scalaMultiLineStringLiteral
 
-syn region scaladocCodeBlockProcessedMultiLineStringLiteral matchgroup=scalaAlphaId  start=~[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="""~rs=e-3 end=/""""\@!/re=e contains=@scalaProcessedStringEscapeCluster,scaladocCodeBlockLeftMergin keepend contained " fold
+syn region scaladocCodeBlockProcessedMultiLineStringLiteral matchgroup=scalaAlphaid  start=~[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="""~rs=e-3 end=/""""\@!/re=e contains=@scalaProcessedStringEscapeCluster,scaladocCodeBlockLeftMergin keepend contained " fold
 hi def link scaladocCodeBlockProcessedMultiLineStringLiteral scalaProcessedMultiLineStringLiteral
 
 syn region scaladocCodeBlockMultiLineComment start="/\*" end="\*/" contains=scaladocCodeBlockMultiLineComment,scaladocCodeBlockLeftMergin,@scalaCommentdocCluster extend contained keepend " fold

@@ -25,8 +25,12 @@ object Identifier {
         = 3
     val \ = 3
     val / = 3
+    ++/**/"hello" = 3
 
     /*  */
+
+    val A_/ = 3
+    val abc = 3
 
     val _/* comment */ = 3
     val _// comment
@@ -34,6 +38,9 @@ object Identifier {
     val A_/* comment */ = 3
     val __// comment
        = 3
+
+    /*^**/
+    val A_/**/ = 3
 }
 
 object UnicodeEscape {
@@ -91,6 +98,7 @@ $hello
     val --> = 3 // not reserved
     val `:` = 3 // not reserved
     val a_\ = 4
+    val A_/**/ = 3
 }
 
 object NullLiteral {
@@ -100,7 +108,7 @@ object NullLiteral {
 object SingleLineComments {
     val x: Int = 0 // lookma
 
-    val z = 'fa+ 3 // ' fa + 3 // comment
+    val z = 'fa+ 3 // ' fa + 3 comment
     val k = "fa + 3 // " fa + 3 // no comment
 }
 
@@ -195,6 +203,9 @@ object SymbolLiterals {
     val ok = '\u0061 // optimistically a symbol
     val error = '\u0 
     val ok = 'a\u0061
+    val withcomment = 'abc_/**/
+    '+++/**/ // a symbol and the empty commen
+    val +++/**/= 3
 }
 
 object CharacterLiterals { 
@@ -217,6 +228,7 @@ object CharacterLiterals {
     val aChar = 'ab' // error
     val aChar = 'abcd' // error
     val aChar = ' // error
+    val err = '
 }
 
 object StringLiterals {
@@ -230,6 +242,7 @@ object StringLiterals {
     val thing = "A String" // this is a trailing comment
     val thing = "A String with a \" and \\ and \' in it"
     val intString = "A string with $stuff // and a comment in it"
+    val str = "$hello" // no escape
     
     val error = "
     val error = "\na
@@ -266,6 +279,10 @@ object ProcessedStringLiterals {
     a$f"return this $thing"
     A_@"""return this $thing"""
     pq"return this $__+" // $__ escapes.
+    p/**/"return this $thing" // shall not escape.
+    p_/**/"$thing" // shall not escape, but scalac does!
+    p"return this $thing" // shall escape.
+    p_"a $thing" // shall escape.
 
     val intString = sql"select * from T where id = $id and name = ${name}"
     val intString = sql"""
