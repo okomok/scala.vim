@@ -18,10 +18,27 @@ object StandardTest {
     } finally {
     }
 }
+object Identifier {
+    val A_/* comment */ = 3
+    val -*-*/* comment */ = 3
+    val **// comment
+        = 3
+    val \ = 3
+    val / = 3
+
+    /*  */
+
+    val _/* comment */ = 3
+    val _// comment
+       = 3
+    val A_/* comment */ = 3
+    val __// comment
+       = 3
+}
 
 object UnicodeEscape {
     val \u1431 = 0
-    val \\\\\uuuuuu1543 = 0 // should be broken
+    val \\\\\uuuuuu1543= 0 // should be broken
     val \u12345 = 0 // shall be broken
     val \\\\u1533 // shall be broken
     val s = "\\u1532" // '\\' should win.

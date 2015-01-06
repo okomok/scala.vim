@@ -1,9 +1,36 @@
 
 /**
- * @throws My.T hello
+ * @define COLL a
+ * @throws My.T hello $COLL
+ * @usecase def hello(): a $COLL a$COLL
+ * @usecase def hello(val k = "$COLL"): Int // infeasible. Who cares.
+ * {{{
+ *     $HELLO
+ * }}}
  **/
 def hello = ()
 
+// FIXME
+/**
+ * {{{
+ *     " */ "
+ * }}}
+ */
+def hello = ()
+*/
+
+val *// comment
+  = 3
+val */* = x */ = 3 
+
+// FIXME
+/**
+ * {{{
+ *     " /* "
+ * }}}
+ */
+def hello = ()
+*/
 
 def hello = 3 * 2
 
@@ -88,7 +115,7 @@ def hello()
 */
 def hello
 eeae """ }}}
-*/
+*/ """
 
 // compromise..
 /**

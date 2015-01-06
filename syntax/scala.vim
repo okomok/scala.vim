@@ -51,15 +51,15 @@ hi def link scalaUnicodeEscapeError Error
 " Identifiers
 
 syn cluster scalaIdCluster contains=scalaAlphaId,scalaOp,scalaReservedOp,scalaLiteralId
-hi def link scalaId Normal
+hi def link scalaId Identifier
 
-" Mixed Identifiers - take care of regex greediness.
-syn match scalaAlphaId "[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="
+" Mixed Identifiers
+syn match scalaAlphaId "[A-Z$_a-z][A-Z$_a-z0-9]*"
+syn match scalaAlphaId "[A-Z$_a-z][A-Z$_a-z0-9]*_" nextgroup=scalaOp
 hi def link scalaAlphaId scalaId
 
-" Operator-only Identifiers - don't eat "\\" in unicode-escape.
-syn match scalaOp "[!#%&*+-/:<=>?@\\^]*\\u\@!"
-syn match scalaOp "[!#%&*+-/:<=>?@\\^]*[!#%&*+-/:<=>?@^]"
+" Operator-only Identifiers - don't eat "//", "/*" and "\\u".
+syn match scalaOp "[!#%&*+-/:<=>?@\\^]\+\%(/\*\|//\|/\*\@=\|//\@=\|\\u\@=\)\@<!"
 hi def link scalaOp scalaId
 
 " Literal Identifiers (SLS 1.1.2)
@@ -144,7 +144,9 @@ hi def link scalaTodo Todo
 " Literals
 
 syn cluster scalaLiteralCluster contains=@scalaSingleLineLiteralCluster,@scalaMultiLineLiteralCluster
-syn cluster scalaSingleLineLiteralCluster contains=scalaIntegerLiteral,scalaFloatingPointLiteral,scalaBooleanLiteral,scalaUnclosedCharacterLiteralError,scalaSymbolLiteral,scalaCharacterLiteral,scalaSingleLineStringLiteral,scalaOctalEscape,scalaCharEscapeInChar,scalaNullLiteral,scalaProcessedSingleLineStringLiteral
+syn cluster scalaSingleLineLiteralCluster contains=scalaIntegerLiteral,scalaFloatingPointLiteral,scalaBooleanLiteral,
+    \ scalaUnclosedCharacterLiteralError,scalaSymbolLiteral,scalaCharacterLiteral,scalaSingleLineStringLiteral,
+    \ scalaOctalEscape,scalaCharEscapeInChar,scalaNullLiteral,scalaProcessedSingleLineStringLiteral
 syn cluster scalaMultiLineLiteralCluster contains=scalaMultiLineStringLiteral,scalaProcessedMultiLineStringLiteral
 
 " Integer Literals (SLS 1.3.1)
@@ -202,8 +204,10 @@ hi def link scalaNullLiteral Keyword
 
 " Processed String Literals (SIP-11) - shall ignore scalaCharEscape.
 "   starts with scalaAlphaId; you can't use lookbehind for some regex issue.
-syn region scalaProcessedSingleLineStringLiteral matchgroup=scalaAlphaId start=~[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="~rs=e-1   end=/"/re=e       contains=@scalaProcessedStringEscapeCluster keepend oneline
-syn region scalaProcessedMultiLineStringLiteral  matchgroup=scalaAlphaId start=~[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="""~rs=e-3 end=/""""\@!/re=e contains=@scalaProcessedStringEscapeCluster keepend fold
+syn region scalaProcessedSingleLineStringLiteral matchgroup=scalaAlphaId start=~[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="~rs=e-1
+    \ end=/"/re=e       contains=@scalaProcessedStringEscapeCluster keepend oneline
+syn region scalaProcessedMultiLineStringLiteral  matchgroup=scalaAlphaId start=~[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="""~rs=e-3
+    \ end=/""""\@!/re=e contains=@scalaProcessedStringEscapeCluster keepend fold
 hi def link scalaProcessedSingleLineStringLiteral scalaSingleLineStringLiteral
 hi def link scalaProcessedMultiLineStringLiteral scalaMultiLineStringLiteral
 
@@ -252,6 +256,14 @@ syn region scaladocMultiLineComment start="/\*\*\@!"       end="/*/" contains=sc
 syn region scaladocMultiLineComment start="[^/*]/\*\*/\@!" end="\*/" contains=scaladocMultiLineComment keepend extend contained fold
 hi def link scaladocMultiLineComment scalaMultiLineComment
 
+" Before parsing
+syn cluster scaladocPreParseCluster contains=scaladocEscape,scalaMultiLineComment
+
+" Scaladoc Escape
+syn match scaladocEscape  "\$[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" nextgroup=scaladocEscapedId contained
+syn match scaladocEscapedId "[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" contained
+hi def link scaladocEscape SpecialComment
+hi def link scaladocEscapedId SpecialComment
 
 syn cluster scaladocBodyCluster contains=@scaladocNonBlockElementCluster,scaladocLeftMerginal
 syn cluster scaladocNonBlockElementCluster contains=@scaladocInlineElementCluster,scaladocCodeBlock,scaladocMultiLineComment,scaladocEscape,@scalaHtml
@@ -259,21 +271,22 @@ syn cluster scaladocNonBlockElementCluster contains=@scaladocInlineElementCluste
 
 " Scaladoc Inline Elements (https://wiki.scala-lang.org/display/SW/Syntax)
 
-syn cluster scaladocInlineElementCluster contains=scaladocItalic,scaladocBold,scaladocUnderline,scaladocMonospace,scaladocSuperscript,scaladocSubscript,scaladocEntityLink
+syn cluster scaladocInlineElementCluster contains=scaladocItalic,scaladocBold,scaladocUnderline,scaladocMonospace,scaladocSuperscript,
+    \ scaladocSubscript,scaladocEntityLink
 hi def link scaladocInlineElement SpecialComment
-syn region scaladocItalic start="''" end="''" contains=scalaMultiLineComment contained oneline keepend
+syn region scaladocItalic start="''" end="''" contains=@scaladocPreParseCluster contained oneline keepend
 hi def link scaladocItalic scaladocInlineElement
-syn region scaladocBold start="'''" end="'''" contains=scalaMultiLineComment contained oneline keepend
+syn region scaladocBold start="'''" end="'''" contains=@scaladocPreParseCluster contained oneline keepend
 hi def link scaladocBold scaladocInlineElement
-syn region scaladocUnderline start="__" end="__" contains=scalaMultiLineComment contained oneline keepend
+syn region scaladocUnderline start="__" end="__" contains=@scaladocPreParseCluster contained oneline keepend
 hi def link scaladocUnderline scaladocInlineElement
-syn region scaladocMonospace start="`" end="`" contains=scalaMultiLineComment contained oneline keepend
+syn region scaladocMonospace start="`" end="`" contains=@scaladocPreParseCluster contained oneline keepend
 hi def link scaladocMonospace scaladocInlineElement
-syn region scaladocSuperscript start="\^" end="\^" contains=scalaMultiLineComment contained oneline keepend
+syn region scaladocSuperscript start="\^" end="\^" contains=@scaladocPreParseCluster contained oneline keepend
 hi def link scaladocSuperscript scaladocInlineElement
-syn region scaladocSubscript start=",," end=",," contains=scalaMultiLineComment contained oneline keepend
+syn region scaladocSubscript start=",," end=",," contains=@scaladocPreParseCluster contained oneline keepend
 hi def link scaladocSubscript scaladocInlineElement
-syn region scaladocEntityLink start="\[\[" end="\]\]" contains=scalaMultiLineComment contained oneline keepend
+syn region scaladocEntityLink start="\[\[" end="\]\]" contains=@scaladocPreParseCluster contained oneline keepend
 hi def link scaladocEntityLink scaladocInlineElement
 
 
@@ -304,10 +317,13 @@ hi def link scaladocCodeBlockLeftMergin scaladoc
 
 " override multi-line syntax for left-mergin
 
-syn cluster scalaSingleLineSyntaxCluster contains=@scalaPreParseCluster,@scalaIdCluster,scalaDelimiter,@scalaKeywordCluster,@scalaSingleLineLiteralCluster,scalaSingleLineComment
-syn cluster scaladocCodeBlockSyntaxCluster contains=@scalaSingleLineSyntaxCluster,scaladocCodeBlockLeftMergin,scaladocCodeBlockBlock,scaladocCodeBlockMultiLineComment,scaladocCodeBlockMultiLineStringLiteral,scaladocCodeBlockProcessedMultiLineStringLiteral,scaladocCodeBlockScaladoc
+syn cluster scalaSingleLineSyntaxCluster contains=@scalaPreParseCluster,@scalaIdCluster,scalaDelimiter,@scalaKeywordCluster,
+    \ @scalaSingleLineLiteralCluster,scalaSingleLineComment
+syn cluster scaladocCodeBlockSyntaxCluster contains=@scalaSingleLineSyntaxCluster,scaladocCodeBlockLeftMergin,scaladocCodeBlockBlock,
+    \ scaladocCodeBlockMultiLineComment,scaladocCodeBlockMultiLineStringLiteral,scaladocCodeBlockProcessedMultiLineStringLiteral,
+    \ scaladocCodeBlockScaladoc,scaladocCodeBlockMultiLineStringLiteral,scaladocCodeBlockProcessedMultiLineStringLiteral,scaladocCodeBlockScaladoc
 
-syn region scaladocCodeBlockMultiLineStringLiteral start=/"""/ end=/""""\@!/ contains=@scalaPreParseCluster,scaladocCodeBlockLeftMergin,scalaMultiLineComment keepend contained " fold
+syn region scaladocCodeBlockMultiLineStringLiteral start=/"""/ end=/""""\@!/ contains=@scalaPreParseCluster,scaladocCodeBlockLeftMergin,scaladocPreParseCluster keepend contained " fold
 hi def link scaladocCodeBlockMultiLineStringLiteral scalaMultiLineStringLiteral
 
 syn region scaladocCodeBlockProcessedMultiLineStringLiteral matchgroup=scalaAlphaId  start=~[A-Z$_a-z][A-Z$_a-z0-9]*\%(_\@<=[!#%&*+-/:<=>?@\\^]\+\)\="""~rs=e-3 end=/""""\@!/re=e contains=@scalaProcessedStringEscapeCluster,scaladocCodeBlockLeftMergin keepend contained " fold
@@ -327,7 +343,8 @@ hi def link scaladocCodeBlockBlock scalaMultiLineComment
 
 " Scaladoc Tags and Annotations (https://wiki.scala-lang.org/display/SW/Tags+and+Annotations)
 
-syn cluster scaladocTagCluster contains=scaladocParam,scaladocTParam,scaladocReturn,scaladocThrows,scaladocSee,scaladocNote,scaladocExample,scaladocAuthor,scaladocVersion,scaladocSince,scaladocTodo,scaladocDefine,scaladocInheritdoc
+syn cluster scaladocTagCluster contains=scaladocParam,scaladocTParam,scaladocReturn,scaladocThrows,scaladocSee,
+    \ scaladocNote,scaladocExample,scaladocUsecase,scaladocAuthor,scaladocVersion,scaladocSince,scaladocTodo,scaladocDefine,scaladocInheritdoc
 hi def link scaladocTagCluster SpecialComment
 
 syn match scaladocParam "@constructor\>" contained 
@@ -338,7 +355,7 @@ syn match scaladocTParam "@tparam\>" nextgroup=@scalaIdCluster contained skipwhi
 hi def link scaladocTParam scaladocTagCluster
 syn match scaladocReturn "@return\>" contained
 hi def link scaladocReturn scaladocTagCluster
-syn match scaladocThrows "@throws\>" contained " nextgroup=scaladocTypeName contained skipwhite
+syn match scaladocThrows "@throws\>" nextgroup=scaladocTypeName contained skipwhite
 hi def link scaladocThrows scaladocTagCluster
 syn match scaladocSee "@see\>" contained
 hi def link scaladocSee scaladocTagCluster
@@ -346,7 +363,7 @@ syn match scaladocNote "@note\>" contained
 hi def link scaladocNote scaladocTagCluster
 syn match scaladocExample "@example\>" contained
 hi def link scaladocExample scaladocTagCluster
-syn match scaladocUsecase "@usecase\>" contained
+syn match scaladocUsecase "@usecase\>" nextgroup=scaladocSimpleDef contained skipwhite
 hi def link scaladocUsecase scaladocTagCluster
 syn match scaladocAuthor "@author\>" contained
 hi def link scaladocAuthor scaladocTagCluster
@@ -361,15 +378,12 @@ hi def link scaladocDefine scaladocTagCluster
 syn match scaladocInheritdoc "@inheritdoc\>"
 hi def link scaladocInheritdoc scaladocTagCluster
 
-" Scaladoc Escape
-syn match scaladocEscape  "\$[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" nextgroup=scaladocEscapedId contained
-syn match scaladocEscapedId "[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" contained
-hi def link scaladocEscape SpecialComment
-hi def link scaladocEscapedId scaladoc
-
 " Type? - I don't know how to parse a type followed by text.
 syn match scaladocTypeName "[^ ]\+" contained
 hi def link scaladocTypeName scalaId
+
+" Probably ok.
+syn region scaladocSimpleDef start="." end="$" contains=@scalaSingleLineSyntaxCluster,scaladocEscape contained oneline
 
 
 " XML mode (SLS 1.5) " TODO
