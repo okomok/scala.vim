@@ -45,7 +45,12 @@ syn sync minlines=200 maxlines=1000
 
  " fallback
 syn match scalaSyntaxError "[^ ]"
-hi def link scalaSyntaxError Error
+
+if !exists("scala_has_unicode")
+    hi def link scalaSyntaxError Error
+else
+    hi def link scalaSyntaxError Normal
+endif
 
 
 " Escape before parsing
@@ -67,7 +72,12 @@ hi link scalaUnicodeEscapeError scalaSyntaxError
 " Identifiers
 
 syn cluster scalaIdCluster contains=scalaAlphaid,scalaOp,scalaReservedOp,scalaLiteralId
-hi def link scalaId Identifier
+
+if !exists("scala_has_unicode")
+    hi def link scalaId Identifier
+else
+    hi def link scalaId Normal
+endif
 
 " Mixed Identifiers
 syn match scalaAlphaid "[A-Z$_a-z][A-Z$_a-z0-9]*"  nextgroup=scalaProcessedStringLiteralElement
@@ -204,15 +214,14 @@ hi def link scalaBooleanLiteral Keyword
 " Symbol Literals (SLS 1.3.7) - 'scalaAlphaid and 'scalaOp; placed before Character Literals
 
 syn match scalaSymbolLiteral "'" nextgroup=scalaAlphaidInSymbolLiteral,scalaOpInSymbolLiteral
-" syn match scalaSymbolLiteral "'\%(\\u\+[0-9A-Fa-f]\{4}\)\@=" " optimistic
 hi def link scalaSymbolLiteral Constant
 
 " following scalac behavior
 syn match scalaSymbolLiteral "'/"   nextgroup=scalaOpInSymbolLiteral
 syn match scalaSymbolLiteral "'/\*" nextgroup=scalaOpInSymbolLiteral
 
-syn match scalaUnclosedCharacterLiteralError "'$"
-syn match scalaUnclosedCharacterLiteralError "'\s\@="
+syn match scalaUnclosedCharacterLiteralError "'\\\=$"
+syn match scalaUnclosedCharacterLiteralError "'\\\=\s\@="
 hi link scalaUnclosedCharacterLiteralError scalaSyntaxError
 
 syn match scalaAlphaidInSymbolLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*"  contained
