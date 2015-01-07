@@ -121,13 +121,10 @@ syn keyword scalaReservedWord macro
 hi def link scalaReservedWord Keyword
 
 " Modifiers
-syn keyword scalaLocalModifier abstract final sealed implicit lazy
+syn keyword scalaModifier abstract final sealed implicit lazy override
 syn keyword scalaAccessModifier private protected
-syn keyword scalaOverride override
 hi def link scalaModifier StorageClass
-hi def link scalaLocalModifier scalaModifier
 hi def link scalaAccessModifier scalaModifier
-hi def link scalaOverride scalaModifier
 
 " Wildcard
 syn keyword scalaWildcard _
@@ -142,6 +139,7 @@ hi def link scalaConditional Conditional
 syn keyword scalaRepeat do for while yield
 hi def link scalaRepeat Repeat
 syn keyword scalaLabel case match
+" syn match scalaLabel "\<case\>" " you can't win against keyword.
 hi def link scalaLabel Label
 syn keyword scalaException catch finally throw try
 hi def link scalaException Exception
@@ -157,6 +155,11 @@ hi def link scalaMacro Macro
 " Type
 syn keyword scalaStructure class extends forSome object package trait type
 hi def link scalaStructure Structure
+
+" Case Modifier
+" TODO: how to skip newlines?
+" syn match scalaCaseModifier "case\s*\%(class\>\|object\>\)\@="
+" hi def link scalaCaseModifier scalaModifier
 
 
 " Comments

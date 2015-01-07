@@ -7,9 +7,25 @@
 package testfile
 import java.something.com
 
+private object ModifierTest {
+    // TODO
+    case object x
+    case class x
+    case
+        object x
+    case
+        class x
+    private val i = x
+}
 
 object StandardTest {
     if (true) {
+    }
+
+    match x {
+        case i => hello
+        case object2 => hello
+        case class2 => hello
     }
 
     try {
