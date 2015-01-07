@@ -38,7 +38,14 @@ let b:current_syntax = "scala"
 syn case match
 syn sync minlines=200 maxlines=1000
 
-" ORDER MATTERS!
+" XXX ORDER MATTERS!
+
+
+" Syntax Error
+
+ " fallback
+syn match scalaSyntaxError "[^ ]"
+hi def link scalaSyntaxError Error
 
 
 " Escape before parsing
@@ -46,8 +53,7 @@ syn sync minlines=200 maxlines=1000
 if !exists("scala_scaladocmode")
     syn cluster scalaPreParseCluster contains=scalaUnicodeEscape,scalaUnicodeEscapeError
 else "TODO
-    syn cluster scalaPreParseCluster contains=scalaUnicodeEscape,scalaUnicodeEscapeError,
-        \ scaladocEscape,scaladocCodeBlockLeftMergin,@scalaCommentCluster
+    syn cluster scalaPreParseCluster contains=@scaladocPreParseCluster
 endif
 
 
@@ -55,13 +61,13 @@ endif
 syn match scalaUnicodeEscapeError "\\u" " fallback
 syn match scalaUnicodeEscape "\\u\+[0-9A-Fa-f]\{4}"
 hi def link scalaUnicodeEscape SpecialChar
-hi def link scalaUnicodeEscapeError Error
+hi link scalaUnicodeEscapeError scalaSyntaxError
 
 
 " Identifiers
 
 syn cluster scalaIdCluster contains=scalaAlphaid,scalaOp,scalaReservedOp,scalaLiteralId
-hi def link scalaId Normal
+hi def link scalaId Identifier
 
 " Mixed Identifiers
 syn match scalaAlphaid "[A-Z$_a-z][A-Z$_a-z0-9]*"  nextgroup=scalaProcessedStringLiteralElement
@@ -76,7 +82,6 @@ hi def link scalaOp scalaId
 hi link scalaOpInAlphaid scalaAlphaid
 
 " Literal Identifiers (SLS 1.1.2)
-syn region scalaLiteralIdError matchgroup=Error start ="`" end ="$" " fallback
 syn region scalaLiteralId start="`" end="`" contains=scalaCharEscape,@scalaPreParseCluster oneline keepend
 hi def link scalaLiteralId scalaAlphaid
 
@@ -96,11 +101,8 @@ hi def link scalaDelimiter Delimiter
 syntax region scalaBlockExpr matchgroup=scalaDelimiter start="{" end="}" fold contains=TOP
 
 
-" Keywords
-
-syn cluster scalaKeywordCluster contains=scalaReservedWord,scalaLocalModifier,scalaImport,scalaMacro,scalaWildcard,scalaStandardType
-
 " Reserved Words (SLS 1.1)
+
 syn keyword scalaReservedWord abstract case catch class def
 syn keyword scalaReservedWord do else extends false final
 syn keyword scalaReservedWord finally for forSome if implicit
@@ -121,15 +123,35 @@ hi def link scalaLocalModifier scalaModifier
 hi def link scalaAccessModifier scalaModifier
 hi def link scalaOverride scalaModifier
 
+" Wildcard
+syn keyword scalaWildcard _
+hi def link scalaWildcard Keyword
 " For Vim standards
+
+
+" For Vim standards
+
+" Statement
+syn keyword scalaConditional else if
+hi def link scalaConditional Conditional
+syn keyword scalaRepeat do for while yield
+hi def link scalaRepeat Repeat
+syn keyword scalaLabel case match
+hi def link scalaLabel Label
+syn keyword scalaException catch finally throw try
+hi def link scalaException Exception
+syn keyword scalaReturn return
+hi def link scalaReturn Statement
+
+" PreProc
 syn keyword scalaImport import
 hi def link scalaImport Include
 syn keyword scalaMacro macro
 hi def link scalaMacro Macro
 
-" Wildcard (SLS 1.1)
-syn keyword scalaWildcard _
-hi def link scalaWildcard Keyword
+" Type
+syn keyword scalaStructure class extends forSome object package trait type
+hi def link scalaStructure Structure
 
 
 " Comments
@@ -163,32 +185,35 @@ syn cluster scalaSingleLineLiteralCluster contains=scalaIntegerLiteral,scalaFloa
 syn cluster scalaMultiLineLiteralCluster contains=scalaMultiLineStringLiteral,scalaProcessedMultiLineStringLiteral
 
 " Integer Literals (SLS 1.3.1)
-syn match scalaIntegerLiteral "\<\%(0\|\%([1-9]\%(0\|[1-9]\)*\)\)[Ll]\=\>"
-syn match scalaIntegerLiteral "\<0[xX][0-9A-Fa-f]\+[Ll]\=\>"
+syn match scalaIntegerLiteral "\%(0\|\%([1-9]\%(0\|[1-9]\)*\)\)[Ll]\=\>"
+syn match scalaIntegerLiteral "0[xX][0-9A-Fa-f]\+[Ll]\=\>"
 hi def link scalaIntegerLiteral Number
 
 " Floating Point Literals (SLS 1.3.2)
-syn match scalaFloatingPointLiteral "\<[0-9]\+\.[0-9]\+\%([Ee][+-]\=[0-9]\+\)\=[FfDd]\=\>"
+syn match scalaFloatingPointLiteral "[0-9]\+\.[0-9]\+\%([Ee][+-]\=[0-9]\+\)\=[FfDd]\=\>"
 syn match scalaFloatingPointLiteral "\.[0-9]\+\%([Ee][+-]\=[0-9]\+\)\=[FfDd]\=\>"
-syn match scalaFloatingPointLiteral "\<[0-9]\+[Ee][+-]\=[0-9]\+[FfDd]\=\>"
-syn match scalaFloatingPointLiteral "\<[0-9]\+\%([Ee][+-]\=[0-9]\+\)\=[FfDd]\>"
+syn match scalaFloatingPointLiteral "[0-9]\+[Ee][+-]\=[0-9]\+[FfDd]\=\>"
+syn match scalaFloatingPointLiteral "[0-9]\+\%([Ee][+-]\=[0-9]\+\)\=[FfDd]\>"
 hi def link scalaFloatingPointLiteral Float
 
 " Boolean Literals (SLS 1.3.3)
 syn keyword scalaBooleanLiteral true false
 hi def link scalaBooleanLiteral Keyword
 
-" fallback
-syn match scalaUnclosedCharacterLiteralError "'"
-hi def link scalaUnclosedCharacterLiteralError Error
-
 
 " Symbol Literals (SLS 1.3.7) - 'scalaAlphaid and 'scalaOp; placed before Character Literals
 
-syn match scalaSymbolLiteral "'[ \\]\@!" nextgroup=scalaAlphaidInSymbolLiteral,scalaOpInSymbolLiteral
-syn match scalaSymbolLiteral "'\%(\\u\+[0-9A-Fa-f]\{4}\)\@=" " optimistic
+syn match scalaSymbolLiteral "'" nextgroup=scalaAlphaidInSymbolLiteral,scalaOpInSymbolLiteral
+" syn match scalaSymbolLiteral "'\%(\\u\+[0-9A-Fa-f]\{4}\)\@=" " optimistic
 hi def link scalaSymbolLiteral Constant
+
+" following scalac behavior
+syn match scalaSymbolLiteral "'/"   nextgroup=scalaOpInSymbolLiteral
+syn match scalaSymbolLiteral "'/\*" nextgroup=scalaOpInSymbolLiteral
+
 syn match scalaUnclosedCharacterLiteralError "'$"
+syn match scalaUnclosedCharacterLiteralError "'\s\@="
+hi link scalaUnclosedCharacterLiteralError scalaSyntaxError
 
 syn match scalaAlphaidInSymbolLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*"  contained
 syn match scalaAlphaidInSymbolLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*_" nextgroup=scalaOpInAlphaidInSymbolLiteral,@scalaCommentCluster contained
@@ -220,17 +245,12 @@ syn keyword scalaNullLiteral null
 hi def link scalaNullLiteral Keyword
 
 " String Literals (SLS 1.3.5)
-syn region scalaUnclosedStringLiteralError matchgroup=Error start =/"/ skip=/\\"/ end =/$/ " fallback
 syn region scalaStringLiteral start=/"/ skip=/\\"/ end=/"/ contains=@scalaPreParseCluster,scalaCharEscape keepend oneline
 syn region scalaStringLiteral start=/"""/ end=/""""\@!/    contains=@scalaPreParseCluster                 keepend fold  " shall ignore scalaCharEscape.
 hi def link scalaStringLiteral String
 
 
 " Processed String Literals (SIP-11) - shall ignore scalaCharEscape.
-
-" syn match scalaProcessedStringLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*"  nextgroup=scalaProcessedStringLiteralElement
-" syn match scalaProcessedStringLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*_" nextgroup=scalaOpInAlphaidInProcessedStringLiteral,scalaProcessedStringLiteralElement
-hi link scalaProcessedStringLiteral Error
 
 syn region scalaProcessedStringLiteralElement start=/"/   end=/"/       contains=@scalaProcessedStringEscapeCluster keepend contained oneline
 syn region scalaProcessedStringLiteralElement start=/"""/ end=/""""\@!/ contains=@scalaProcessedStringEscapeCluster keepend contained fold
@@ -252,7 +272,7 @@ hi def link scalaDollarEscape SpecialChar
 hi def link scalaEscapedId scalaAlphaid
 
 syn match scalaInvalidStringInterpolationError "\$[A-Za-z$_{]\@!" contained
-hi def link scalaInvalidStringInterpolationError Error
+hi def link scalaInvalidStringInterpolationError scalaSyntaxError
 
 
 " Annotations (SLS 11.0)
@@ -278,7 +298,7 @@ syn region scaladocMultiLineComment start="[^/*]/\*\*/\@!" end="\*/" contains=sc
 hi def link scaladocMultiLineComment scalaMultiLineComment
 
 " Before parsing
-syn cluster scaladocPreParseCluster contains=scaladocEscape,scalaMultiLineComment
+syn cluster scaladocPreParseCluster contains=scaladocEscape,scalaMultiLineComment,scaladocCodeBlockLeftMergin
 
 " Scaladoc Escape
 syn match scaladocEscape  "\$[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" nextgroup=scaladocEscapedId contained
@@ -332,7 +352,7 @@ hi def link scaladocListBlock SpecialComment
 
 " Scaladoc Code Block
 
-syn region scaladocCodeBlock matchgroup=SpecialComment start="{{{" end="}}}" contains=scaladocCodeBlockLeftMergin,@scaladocPreParseCluster contained keepend
+syn region scaladocCodeBlock matchgroup=SpecialComment start="{{{" end="}}}" contains=@scaladocPreParseCluster contained keepend
 syn match scaladocCodeBlockLeftMergin "^\%( *\*\)\+\%( \+\|$\)" contained
 hi def link scaladocCodeBlockLeftMergin scaladoc
 hi def link scaladocCodeBlock Normal
@@ -384,4 +404,3 @@ hi def link scaladocTypeName scalaId
 
 syn region scalaXmlMode start="[ ({]<[A-Z$_a-z0-9!?]" end="$" contains=@scalaXml
 hi def link scalaXmlMode Normal
-

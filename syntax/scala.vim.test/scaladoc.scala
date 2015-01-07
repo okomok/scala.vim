@@ -22,7 +22,7 @@ def ok()
  * }}}
  */
 def hello = ()
-*/
+
 
 val *// comment
   = 3
@@ -35,7 +35,7 @@ val */* = x */ = 3
  * }}}
  */
 def hello = ()
-*/
+}}} */
 
 def hello = 3 * 2
 

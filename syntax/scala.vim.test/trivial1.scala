@@ -19,7 +19,7 @@ object StandardTest {
     }
 }
 object Identifier {
-    val A_/* comment */ = 3
+    val A_/* comment */ =3l
     val -*-*/* comment */ = 3
     val **// comment
         = 3
@@ -206,6 +206,17 @@ object SymbolLiterals {
     val withcomment = 'abc_/**/
     '+++/**/ // a symbol and the empty commen
     val +++/**/= 3
+    '/**/ // symbol wrt scalac
+    '/**/**/ // '/**
+    '/**//a  // '/**
+    '// // symbol wrt scalac
+    '/// // '/
+    '//^ // '//^
+    '//**/ // '/
+    '/////**/ '/
+
+    val x = ' // error
+    val x = '
 }
 
 object CharacterLiterals { 
@@ -246,6 +257,7 @@ object StringLiterals {
     
     val error = "
     val error = "\na
+
 }
 
 object MultiLineStringLiterals {
