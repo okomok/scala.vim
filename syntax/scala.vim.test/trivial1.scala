@@ -223,7 +223,7 @@ object CharacterLiterals {
     val aChar = '\1'
     val aChar = '\"'
     val aChar = '\\'
-    val aChar = '"'
+    val aChar = '"';
     val aChar = '\'';
     val aChar = '\n'
     val aChar = '\12'
@@ -233,6 +233,9 @@ object CharacterLiterals {
     val aChar = 'a'
     val aChar = '$h' // error
     val anEscapedChar = '\\'
+    val aChar = ' '// whitespace char
+    val err = '\na
+
 
     val anotherEscapedChar = '\n'
     val aUnicodeChar = '\u00ab'

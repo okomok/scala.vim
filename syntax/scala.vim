@@ -219,10 +219,6 @@ hi def link scalaSymbolLiteral Constant
 syn match scalaSymbolLiteral "'/"   nextgroup=scalaOpInSymbolLiteral
 syn match scalaSymbolLiteral "'/\*" nextgroup=scalaOpInSymbolLiteral
 
-syn match scalaUnclosedCharacterLiteralError "'\\\=$"
-syn match scalaUnclosedCharacterLiteralError "'\\\=\s\@="
-hi link scalaUnclosedCharacterLiteralError scalaSyntaxError
-
 syn match scalaAlphaidInSymbolLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*"  contained
 syn match scalaAlphaidInSymbolLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*_" nextgroup=scalaOpInAlphaidInSymbolLiteral,@scalaCommentCluster contained
 hi link scalaAlphaidInSymbolLiteral scalaSymbolLiteral
@@ -235,14 +231,18 @@ hi link scalaOpInAlphaidInSymbolLiteral scalaSymbolLiteral
 
 
 " Character Literals (SLS 1.3.4)
+syn match scalaUnclosedCharacterLiteralError "'$"
+syn match scalaUnclosedCharacterLiteralError "'\s\@="
+syn match scalaUnclosedCharacterLiteralError "'\\\%(u\+[0-9A-Fa-f]\{4}\)\@!" " optimistic
+hi link scalaUnclosedCharacterLiteralError scalaSyntaxError
 syn match scalaCharacterLiteral /'\p'/
-syn match scalaCharacterEscapeLiteral /'\\[btnfr"'\\]'/
-syn match scalaCharacterOctalEscapeLiteral /'\\[0-7]\{1,3}'/ " deprecated
-syn match scalaCharacterUnicodeEscapeLiteral /'\\u\+[0-9A-Fa-f]\{4}'/
+syn match scalaCharEscapeCharacterLiteral /'\\[btnfr"'\\]'/
+syn match scalaOctalEscapeCharacterLiteral /'\\[0-7]\{1,3}'/ " deprecated
+syn match scalaUnicodeEscapeCharacterLiteral /'\\u\+[0-9A-Fa-f]\{4}'/
 hi def link scalaCharacterLiteral Character
-hi def link scalaCharacterEscapeLiteral scalaCharEscape
-hi def link scalaCharacterOctalEscapeLiteral scalaCharEscape
-hi def link scalaCharacterUnicodeEscapeLiteral scalaUnicodeEscape
+hi def link scalaCharEscapeCharacterLiteral scalaCharacterLiteral
+hi def link scalaOctalEscapeCharacterLiteral scalaCharacterLiteral
+hi def link scalaUnicodeEscapeCharacterLiteral scalaCharacterLiteral
 
 " Escape Sequences (SLS 1.3.6)
 syn match scalaCharEscape /\\[btnfr"'\\]/ contained
