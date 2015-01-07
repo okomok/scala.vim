@@ -115,6 +115,7 @@ object SingleLineComments {
 object MultiLineComments {
     val x /**/ = 0
     val y = /*lookma*/0
+
     /**
      * I forgot comments! [[scala.Option]]
      *
@@ -132,6 +133,7 @@ object MultiLineComments {
 
     /* hello /* nested */ */
     hello()    
+
     //scala doc commented out
     /*
      *
@@ -164,6 +166,8 @@ sealed class IntegerLiterals {
     private val x = 0x31f5
     final val y = 0X31f5 
     val z = 0352 // should fail.
+    val i = 3+2
+    val i = .3+2
 }
 
 object FloatingPointLiterals {
@@ -235,7 +239,6 @@ object CharacterLiterals {
     val anEscapedChar = '\\'
     val aChar = ' '// whitespace char
     val err = '\na
-
 
     val anotherEscapedChar = '\n'
     val aUnicodeChar = '\u00ab'

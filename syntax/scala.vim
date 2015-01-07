@@ -61,7 +61,6 @@ else "TODO
     syn cluster scalaPreParseCluster contains=@scaladocPreParseCluster
 endif
 
-
 " Unicode Escape (SLS 1.0)
 syn match scalaUnicodeEscapeError "\\u" " fallback
 syn match scalaUnicodeEscape "\\u\+[0-9A-Fa-f]\{4}"
@@ -94,9 +93,6 @@ hi link scalaOpInAlphaid scalaAlphaid
 " Literal Identifiers (SLS 1.1.2)
 syn region scalaLiteralId start="`" end="`" contains=scalaCharEscape,@scalaPreParseCluster oneline keepend
 hi def link scalaLiteralId scalaAlphaid
-
-
-" Operators
 
 " Reserved Operators (SLS 1.1)
 syn match scalaReservedOp "\%([:=#@]\|=>\|<-\|<:\|<%\|>:\|\%u21d2\|\%u2190\)[!#%&*+-/:<=>?@\\^|~]\@!"
@@ -175,9 +171,7 @@ hi def link scalaSingleLineComment Comment
 syn region scalaMultiLineComment start="/\*" end="\*/" contains=scalaMultiLineComment,@scalaCommentdocCluster extend fold
 hi def link scalaMultiLineComment scalaSingleLineComment
 
-
 " Commentdoc - obsolete or not
-
 syn cluster scalaCommentdocCluster contains=scalaTodo
 
 " Todo
