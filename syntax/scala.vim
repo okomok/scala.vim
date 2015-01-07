@@ -99,7 +99,7 @@ hi def link scalaLiteralId scalaAlphaid
 " Operators
 
 " Reserved Operators (SLS 1.1)
-syn match scalaReservedOp "\%([:=#@]\|=>\|<-\|<:\|<%\|>:\|\%u21d2\|\%u2190\)[!#%&+-/:<=>?@\\^]\@!"
+syn match scalaReservedOp "\%([:=#@]\|=>\|<-\|<:\|<%\|>:\|\%u21d2\|\%u2190\)[!#%&*+-/:<=>?@\\^|~]\@!"
 hi def link scalaReservedOp Operator
 
 
@@ -136,7 +136,6 @@ hi def link scalaOverride scalaModifier
 " Wildcard
 syn keyword scalaWildcard _
 hi def link scalaWildcard Keyword
-" For Vim standards
 
 
 " For Vim standards
