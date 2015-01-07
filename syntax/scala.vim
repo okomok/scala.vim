@@ -44,7 +44,7 @@ syn sync minlines=200 maxlines=1000
 " Syntax Error
 
  " fallback
-syn match scalaSyntaxError "[^ ]"
+syn match scalaSyntaxError "\S"
 
 if !exists("scala_has_unicode")
     hi def link scalaSyntaxError Error
@@ -86,8 +86,8 @@ hi def link scalaAlphaid scalaId
 
 " Operator-only Identifiers
 "   extended and ends immediately.
-syn region scalaOp           start="[!#%&*+-/:<=>?@\\^]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline
-syn region scalaOpInAlphaid  start="[!#%&*+-/:<=>?@\\^]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
+syn region scalaOp           start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline
+syn region scalaOpInAlphaid  start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
 hi def link scalaOp scalaId
 hi link scalaOpInAlphaid scalaAlphaid
 
@@ -228,8 +228,8 @@ syn match scalaAlphaidInSymbolLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*"  contained
 syn match scalaAlphaidInSymbolLiteral "[A-Z$_a-z][A-Z$_a-z0-9]*_" nextgroup=scalaOpInAlphaidInSymbolLiteral,@scalaCommentCluster contained
 hi link scalaAlphaidInSymbolLiteral scalaSymbolLiteral
 
-syn region scalaOpInSymbolLiteral          start="[!#%&*+-/:<=>?@\\^]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
-syn region scalaOpInAlphaidInSymbolLiteral start="[!#%&*+-/:<=>?@\\^]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
+syn region scalaOpInSymbolLiteral          start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
+syn region scalaOpInAlphaidInSymbolLiteral start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
 
 hi link scalaOpInSymbolLiteral scalaSymbolLiteral
 hi link scalaOpInAlphaidInSymbolLiteral scalaSymbolLiteral
@@ -265,7 +265,7 @@ syn region scalaProcessedStringLiteralElement start=/"/   end=/"/       contains
 syn region scalaProcessedStringLiteralElement start=/"""/ end=/""""\@!/ contains=@scalaProcessedStringEscapeCluster keepend contained fold
 hi link scalaProcessedStringLiteralElement scalaStringLiteral
 
-syn region scalaOpInAlphaidInProcessedStringLiteral start="[!#%&*+-/:<=>?@\\^]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster
+syn region scalaOpInAlphaidInProcessedStringLiteral start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster
     \ nextgroup=scalaProcessedStringLiteralElement oneline contained
 hi link scalaOpInAlphaidInProcessedStringLiteral scalaId
 
