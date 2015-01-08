@@ -251,6 +251,7 @@ object CharacterLiterals {
     val aChar = '\12'
     val aChar = '\012'
     val aChar = '\123'
+    val err   = '\a'
     val aChar = '\1234' // error
     val aChar = 'a'
     val aChar = '$h' // error

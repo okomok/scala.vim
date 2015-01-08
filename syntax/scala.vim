@@ -109,7 +109,7 @@ syn match scalaReservedOp "\%([:=#@]\|=>\|<-\|<:\|<%\|>:\|\%u21d2\|\%u2190\)[!#%
 hi def link scalaReservedOp Keyword
 
 " Modifiers
-syn keyword scalaModifier abstract final sealed implicit lazy override
+syn keyword scalaModifier abstract case final sealed implicit lazy override
 syn keyword scalaAccessModifier private protected
 hi def link scalaModifier StorageClass
 hi def link scalaAccessModifier scalaModifier
@@ -124,7 +124,6 @@ hi def link scalaConditional Conditional
 syn keyword scalaRepeat do for while yield
 hi def link scalaRepeat Repeat
 syn keyword scalaLabel case match
-" syn match scalaLabel "\<case\>" " you can't win against keyword.
 hi def link scalaLabel Label
 syn keyword scalaException catch finally throw try
 hi def link scalaException Exception
@@ -141,12 +140,6 @@ hi def link scalaMacro Macro
 syn keyword scalaStructure class extends forSome object package trait type
 hi def link scalaStructure Structure
 
-" Case Modifier
-" TODO: how to skip newlines?
-" syn region scalaCaseModifier start="case\%(\%(\W\)*class\>\)\@=" end="\%(class\)\@<=" 
-" syn match scalaCaseModifier "case\s*\%(class\>\|object\>\)\@="
-" hi def link scalaCaseModifier scalaModifier
-
 " Comments
 syn cluster scalaCommentCluster contains=scalaSingleLineComment,scalaMultiLineComment
 
@@ -162,13 +155,6 @@ hi def link scalaMultiLineComment scalaSingleLineComment
 syn cluster scalaCommentdocCluster contains=scalaCommentdocTag
 syn keyword scalaCommentdocTag TODO FIXME XXX NOTE contained
 hi def link scalaCommentdocTag Todo
-
-" Literals
-syn cluster scalaLiteralCluster contains=@scalaSingleLineLiteralCluster,@scalaMultiLineLiteralCluster
-syn cluster scalaSingleLineLiteralCluster contains=scalaIntegerLiteral,scalaFloatingPointLiteral,scalaBooleanLiteral,
-    \ scalaUnclosedCharacterLiteralError,scalaSymbolLiteral,scalaCharacterLiteral,scalaSingleLineStringLiteral,
-    \ scalaNullLiteral,scalaProcessedSingleLineStringLiteral
-syn cluster scalaMultiLineLiteralCluster contains=scalaMultiLineStringLiteral,scalaProcessedMultiLineStringLiteral
 
 " Integer Literals (SLS 1.3.1)
 syn match scalaIntegerLiteral "\%(0\|\%([1-9]\%(0\|[1-9]\)*\)\)[Ll]\=\>"
@@ -213,13 +199,19 @@ syn match scalaUnclosedCharacterLiteralError "'\s\@="
 syn match scalaUnclosedCharacterLiteralError "'\\\%(u\+[0-9A-Fa-f]\{4}\)\@!" " optimistic
 hi link scalaUnclosedCharacterLiteralError scalaSyntaxError
 syn match scalaCharacterLiteral /'\p'/
-syn match scalaCharEscapeCharacterLiteral /'\\[btnfr"'\\]'/
-syn match scalaOctalEscapeCharacterLiteral /'\\[0-7]\{1,3}'/ " deprecated
-syn match scalaUnicodeEscapeCharacterLiteral /'\\u\+[0-9A-Fa-f]\{4}'/
+syn match scalaCharacterLiteral              /'\%(\\[btnfr"'\\]'\)\@=/
+syn match scalaCharacterLiteral              /\%('\\[btnfr"'\\]\)\@<='/
+syn match scalaCharEscapeInCharacterLiteral /'\@<=\\[btnfr"'\\]'\@=/
+syn match scalaCharacterLiteral               /'\%(\\[0-7]\{1,3}'\)\@=/
+syn match scalaCharacterLiteral               /\%('\\[0-7]\{1,3}\)\@<='/
+syn match scalaOctalEscapeInCharacterLiteral /'\@<=\\[0-7]\{1,3}'\@=/
+syn match scalaCharacterLiteral                 /'\%(\\u\+[0-9A-Fa-f]\{4}'\)\@=/
+syn match scalaCharacterLiteral                 /\%('\\u\+[0-9A-Fa-f]\{4}\)\@<='/
+syn match scalaUnicodeEscapeInCharacterLiteral /'\@<=\\u\+[0-9A-Fa-f]\{4}'\@=/
 hi def link scalaCharacterLiteral Character
-hi def link scalaCharEscapeCharacterLiteral scalaCharacterLiteral
-hi def link scalaOctalEscapeCharacterLiteral scalaCharacterLiteral
-hi def link scalaUnicodeEscapeCharacterLiteral scalaCharacterLiteral
+hi def link scalaOctalEscapeInCharacterLiteral scalaCharEscape
+hi def link scalaUnicodeEscapeInCharacterLiteral scalaUnicodeEscape
+hi def link scalaCharEscapeInCharacterLiteral scalaCharEscape
 
 " Escape Sequences (SLS 1.3.6)
 syn match scalaCharEscape /\\[btnfr"'\\]/ contained
@@ -230,16 +222,18 @@ syn keyword scalaNullLiteral null
 hi def link scalaNullLiteral Keyword
 
 " String Literals (SLS 1.3.5)
-syn region scalaStringLiteral start=/"/ skip=/\\"/ end=/"/ contains=@scalaPreParseCluster,scalaCharEscape keepend oneline
-syn region scalaStringLiteral start=/"""/ end=/""""\@!/    contains=@scalaPreParseCluster                 keepend fold  " shall ignore scalaCharEscape.
 hi def link scalaStringLiteral String
+syn region scalaSingleLineStringLiteral start=/"/ skip=/\\"/ end=/"/ contains=@scalaPreParseCluster,scalaCharEscape keepend oneline
+syn region scalaMultiLineStringLiteral start=/"""/ end=/""""\@!/    contains=@scalaPreParseCluster                 keepend fold  " shall ignore scalaCharEscape.
+hi def link scalaSingleLineStringLiteral String
+hi def link scalaMultiLineStringLiteral String
 
 
 " Processed String Literals (SIP-11) - shall ignore scalaCharEscape.
 
 syn region scalaProcessedStringLiteralElement start=/"/   end=/"/       contains=@scalaProcessedStringEscapeCluster keepend contained oneline
 syn region scalaProcessedStringLiteralElement start=/"""/ end=/""""\@!/ contains=@scalaProcessedStringEscapeCluster keepend contained fold
-hi link scalaProcessedStringLiteralElement scalaStringLiteral
+hi def link scalaProcessedStringLiteralElement scalaStringLiteral
 
 syn region scalaOpInAlphaidInProcessedStringLiteral start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@<=" contains=@scalaCommentCluster,@scalaPreParseCluster
     \ nextgroup=scalaProcessedStringLiteralElement oneline contained
@@ -259,9 +253,6 @@ hi def link scalaEscapedId scalaAlphaid
 syn match scalaInvalidStringInterpolationError "\$[A-Za-z$_{]\@!" contained
 hi def link scalaInvalidStringInterpolationError scalaSyntaxError
 
-
-" Annotations (SLS 11.0)
-" hi def link scalaAnnotation PreProc
 
 " Standard Types (SLS 12.1)
 syn keyword scalaStandardType Any AnyRef AnyVal Unit Boolean Char Byte Short Int Long Float Double ScalaObject String Null Nothing
@@ -348,7 +339,7 @@ syn match scaladocTParam "@tparam\>" nextgroup=@scalaIdCluster contained skipwhi
 hi def link scaladocTParam scaladocTagCluster
 syn match scaladocReturn "@return\>" contained
 hi def link scaladocReturn scaladocTagCluster
-syn match scaladocThrows "@throws\>" contained " nextgroup=scaladocTypeName contained skipwhite
+syn match scaladocThrows "@throws\>" contained
 hi def link scaladocThrows scaladocTagCluster
 syn match scaladocSee "@see\>" contained
 hi def link scaladocSee scaladocTagCluster
@@ -371,9 +362,6 @@ hi def link scaladocDefine scaladocTagCluster
 syn match scaladocInheritdoc "@inheritdoc\>"
 hi def link scaladocInheritdoc scaladocTagCluster
 
-" Type? - I don't know how to parse a type followed by text.
-" syn match scaladocTypeName "\S\+" contained
-" hi def link scaladocTypeName scalaId
 
 " XML mode (SLS 1.5) " TODO
 syn region scalaXmlMode start="[ ({]<[A-Z$_a-z0-9!?]" end="$" contains=@scalaXml
