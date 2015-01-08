@@ -139,7 +139,7 @@ hi def link scalaImport Include
 syn keyword scalaMacro macro
 hi def link scalaMacro Macro
 
-" Type for Vim Standardsa
+" Type for Vim Standards
 syn keyword scalaStructure class extends forSome object package trait type
 hi def link scalaStructure Structure
 
@@ -274,6 +274,8 @@ hi def link scalaStandardType Type
 
 syn region scaladoc start="/\*\*/\@!" end="\*/" contains=@scaladocBodyCluster keepend fold
 hi def link scaladoc scalaMultiLineComment
+syn cluster scaladocBodyCluster contains=@scaladocNonBlockElementCluster,scaladocLeftMerginal
+syn cluster scaladocNonBlockElementCluster contains=@scaladocInlineElementCluster,scaladocCodeBlock,scaladocMultiLineComment,scaladocEscape,@scalaHtml
 
 " Keep normal multi-line comments away, otherwise eaten up.
 syn region scaladocMultiLineComment start="/\*\*\@!"       end="/*/" contains=scaladocMultiLineComment keepend extend contained fold
@@ -288,10 +290,6 @@ syn match scaladocEscape  "\$[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" nextgroup=scaladoc
 syn match scaladocEscapedId "[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" contained
 hi def link scaladocEscape SpecialComment
 hi def link scaladocEscapedId SpecialComment
-
-syn cluster scaladocBodyCluster contains=@scaladocNonBlockElementCluster,scaladocLeftMerginal
-syn cluster scaladocNonBlockElementCluster contains=@scaladocInlineElementCluster,scaladocCodeBlock,scaladocMultiLineComment,scaladocEscape,@scalaHtml
-
 
 " Scaladoc Inline Elements (https://wiki.scala-lang.org/display/SW/Syntax)
 syn cluster scaladocInlineElementCluster contains=scaladocItalic,scaladocBold,scaladocUnderline,scaladocMonospace,scaladocSuperscript,
@@ -378,7 +376,6 @@ hi def link scaladocInheritdoc scaladocTagCluster
 " Type? - I don't know how to parse a type followed by text.
 " syn match scaladocTypeName "\S\+" contained
 " hi def link scaladocTypeName scalaId
-
 
 " XML mode (SLS 1.5) " TODO
 syn region scalaXmlMode start="[ ({]<[A-Z$_a-z0-9!?]" end="$" contains=@scalaXml

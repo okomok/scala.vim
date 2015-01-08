@@ -182,7 +182,7 @@ object MultiLineComments {
 sealed class IntegerLiterals {
     private val x = 0x31f5
     final val y = 0X31f5 
-    val z = 0352 // should fail.
+    val z = 0352 // error 
     val i = 3+2
     val i = .3+2
 }
@@ -194,7 +194,7 @@ object FloatingPointLiterals {
     def float = 1.1F
     def float = 231.1232f
     def float = 231.2321F
-    def float = .2ff // shall be broken
+    def float = .2ff // error 
     def float = .2F
     def double = 1d
     def double = 1D
