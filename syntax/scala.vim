@@ -215,7 +215,7 @@ hi def link scalaUnicodeEscapeInCharacterLiteral scalaUnicodeEscape
 hi def link scalaCharEscapeInCharacterLiteral scalaCharEscape
 
 " Escape Sequences (SLS 1.3.6)
-syn match scalaCharEscape /\\[btnfr"'\\]/ contained extend
+syn match scalaCharEscape /\\[btnfr"'\\]/ contained 
 hi def link scalaCharEscape SpecialChar
 
 " Null Literal 
