@@ -2,6 +2,7 @@
 " Language: Scala
 " Maintainer: Shunsuke Sogame <okomok@gmail.com>
 " References:
+"   syntax/c.vim
 "   Stefan Matthias Aust 2006
 "   https://github.com/derekwyatt/vim-scala
 
@@ -40,7 +41,7 @@ syn sync minlines=200 maxlines=1000
 
 
 " Syntax Error
-syn match scalaSyntaxError "\S" "fallback
+syn match scalaSyntaxError "\S" " fallback
 if !exists("scala_has_unicode")
     hi def link scalaSyntaxError Error
 else
@@ -214,18 +215,25 @@ hi def link scalaUnicodeEscapeInCharacterLiteral scalaUnicodeEscape
 hi def link scalaCharEscapeInCharacterLiteral scalaCharEscape
 
 " Escape Sequences (SLS 1.3.6)
-syn match scalaCharEscape /\\[btnfr"'\\]/ contained
+syn match scalaCharEscape /\\[btnfr"'\\]/ contained extend
 hi def link scalaCharEscape SpecialChar
 
 " Null Literal 
 syn keyword scalaNullLiteral null
 hi def link scalaNullLiteral Keyword
 
+
 " String Literals (SLS 1.3.5)
+
 hi def link scalaStringLiteral String
-syn region scalaSingleLineStringLiteral start=/"/ skip=/\\"/ end=/"/ contains=@scalaPreParseCluster,scalaCharEscape keepend oneline
-syn region scalaMultiLineStringLiteral start=/"""/ end=/""""\@!/    contains=@scalaPreParseCluster                 keepend fold  " shall ignore scalaCharEscape.
+
+" Single-line String Literals
+"   not extended for better Error highlighting.
+syn region scalaSingleLineStringLiteral start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@scalaPreParseCluster,scalaCharEscape keepend oneline
 hi def link scalaSingleLineStringLiteral String
+
+" Multi-line String Literals - shall ignore scalaCharEscape.
+syn region scalaMultiLineStringLiteral start=/"""/ end=/""""\@!/ contains=@scalaPreParseCluster keepend fold
 hi def link scalaMultiLineStringLiteral String
 
 

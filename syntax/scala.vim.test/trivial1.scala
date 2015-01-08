@@ -181,6 +181,7 @@ object MultiLineComments {
 }
 
 sealed class IntegerLiterals {
+    val err = 3b
     private val x = 0x31f5
     final val y = 0X31f5 
     val z = 0352 // error 
@@ -268,6 +269,9 @@ object CharacterLiterals {
 }
 
 object StringLiterals {
+    "\\"
+    "\\\\"
+    "a\" "
     val z = " \" "
     val p = "\""
     val x = " $h " // shall not escape
