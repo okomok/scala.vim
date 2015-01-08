@@ -39,7 +39,7 @@ def hello = ()
 
 def hello = 3 * 2
 
-// TODO FIXME XXX
+// TODO FIXME XXX NOTE
 /* TODO FIXME XXX */
 
 /**

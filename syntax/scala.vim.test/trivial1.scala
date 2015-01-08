@@ -57,6 +57,7 @@ object Identifier {
 
     /*^**/
     val A_/**/ = 3
+    val k = a|b
 }
 
 object UnicodeEscape {
