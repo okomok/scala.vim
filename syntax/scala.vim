@@ -310,27 +310,27 @@ syn region scaladocEntityLink start="\[\[" end="\]\]" contains=@scaladocPreParse
 hi def link scaladocEntityLink scaladocInlineElement
 
 " Start of Block Elements, Tags or Annotations
-syn match scaladocLeftMerginal "\%(/\*\* *\|^\%( *\*\)\+\%( \+\|$\)\)" nextgroup=@scaladocTagCluster,@scaladocBlockElementCluster contained
+syn match scaladocLeftMerginal "\%(/\*\*\s*\|^\%(\s*\*\)\+\%(\s\+\|$\)\)" nextgroup=@scaladocTagCluster,@scaladocBlockElementCluster contained
 hi def link scaladocLeftMerginal scaladoc
 
 
 " Scaladoc Block Elements (https://wiki.scala-lang.org/display/SW/Syntax)
 
-syn cluster scaladocBlockElementCluster contains=scaladocListBlock,scaladocHeading
+syn cluster scaladocBlockElementCluster contains=scaladocListBlockStart,scaladocHeading
 hi def link scaladocBlockElementCluster SpecialComment
 
 syn region scaladocHeading matchgroup=scaladocHeadingQuote start="=\+" end="=\+" contains=@scaladocNonBlockElementCluster contained keepend oneline
 hi def link scaladocHeadingQuote SpecialComment
 hi def link scaladocHeading scaladoc
 
-syn match scaladocListBlock "- " contained
-syn match scaladocListBlock "[A-Za-z0-9]\. " contained
-hi def link scaladocListBlock SpecialComment
+syn match scaladocListBlockStart "-\s" contained
+syn match scaladocListBlockStart "[A-Za-z0-9]\.\s" contained
+hi def link scaladocListBlockStart SpecialComment
 
 
 " Scaladoc Code Block
 syn region scaladocCodeBlock matchgroup=SpecialComment start="{{{" end="}}}" contains=@scaladocPreParseCluster contained keepend
-syn match scaladocCodeBlockLeftMergin "^\%( *\*\)\+\%( \+\|$\)" contained
+syn match scaladocCodeBlockLeftMergin "^\%(\s*\*\)\+\%(\s\+\|$\)" contained
 hi def link scaladocCodeBlockLeftMergin scaladoc
 hi def link scaladocCodeBlock Normal
 
@@ -374,5 +374,5 @@ hi def link scaladocInheritdoc scaladocTagCluster
 
 
 " XML mode (SLS 1.5) " TODO
-syn region scalaXmlMode start="[ ({]<[A-Z$_a-z0-9!?]" end="$" contains=@scalaXml
+syn region scalaXmlMode start="[({]<[A-Z$_a-z0-9!?]" start="\s" end=".\@<=" contains=@scalaXml
 hi def link scalaXmlMode Normal
