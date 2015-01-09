@@ -1,9 +1,4 @@
 
-
-// You can't detect them as identifiers.
-// Compromise; let identifer color be Normal.
-
-
 // http://yuroyoro.hatenablog.com/entry/20091026/1256540286
 import java.lang.{String ⇒ 文字列}
 

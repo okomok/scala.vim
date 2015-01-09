@@ -50,6 +50,7 @@ object Identifier {
 
     /*  */
 
+    val A_**** = 3
     val A_/ = 3
     val abc = 3
 
@@ -231,7 +232,7 @@ object SymbolLiterals {
     val error = '\u0 
     val ok = 'a\u0061
     val withcomment = 'abc_/**/
-    '+++/**/ // a symbol and the empty commen
+    '+++/**/ // a symbol and the empty comment
     val +++/**/= 3
     '/**/ // symbol wrt scalac
     '/**/**/ // '/**
@@ -323,6 +324,7 @@ object ProcessedStringLiterals {
     _0"return this $thing"
     a$f"return this $thing"
     A_@"""return this $thing"""
+    a_@"return this $thing"
     pq"return this $__+" // $__ escapes.
     p/**/"return this $thing" // shall not escape.
     p_/**/"$thing" // shall not escape, but scalac does!
@@ -335,7 +337,7 @@ object ProcessedStringLiterals {
         where id = $id and name = ${s"$name Jr"} and age > ${age + 10}
     """
 
-    val soManyEscapes =   s"\\\"\u0031\n\b\r\f\t" // no escape, shall be broken.
+    val error =   s"\\\"\u0031\n\b\r\f\t" // no escape, shall be broken.
     val soManyEscapes =  "\\\"\u0031\n\b\r\f\t" // all escapes.
     val soManyEscapes = """\\\"\u0031\n\b\r\f\t""" // only unicode escapes.
     val error = " a \ua "
@@ -343,7 +345,7 @@ object ProcessedStringLiterals {
     val intString =  "A string with $stuff // and a comment in it"
     val intString = s"A string /* a comment and */ with $stuff and ${stuff} in it"
     val intString = s"""A string /* a comment and */ with $stuff and ${stuff} in it"""
-    val intFString = f"A string with $$ a $2142  $stuff and ${stuff} and ${eval this}%-2.2f and $stuff%2d in it"
+    val error = f"A string with $$ a $2142  $stuff and ${stuff} and ${eval this}%-2.2f and $stuff%2d in it"
     val intFString = f"""A string with $stuff and ${stuff} and ${eval this}%-2.2f and $stuff%2d in it"""
     
     val x= s"""$$ f$fea $$ $$$ f$f$ f$$f""" // shows error. 
