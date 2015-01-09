@@ -69,10 +69,12 @@ hi def link scalaMixedId Identifier
 
 " Operator-only Identifiers
 "   extended and ends immediately.
-syn region scalaOp          start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@<=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline
-syn region scalaOpInMixedId start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@<=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster nextgroup=scalaProcessedStringLiteralElement oneline contained
+" NOTE: `.` would match without scalaDelimiter contained. Why?
+syn region scalaOp          start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=scalaDelimiter,@scalaCommentCluster,@scalaPreParseCluster oneline
+syn region scalaOpInMixedId start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=scalaDelimiter,@scalaCommentCluster,@scalaPreParseCluster nextgroup=scalaProcessedStringLiteralElement oneline contained
 hi def link scalaOp Operator
 hi def link scalaOpInMixedId scalaMixedId
+
 
 " Literal Identifiers (SLS 1.1.2)
 syn region scalaLiteralId start="`" end="`" contains=scalaCharEscape,@scalaPreParseCluster oneline keepend
@@ -179,8 +181,8 @@ syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9][
 syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"]*_$ nextgroup=scalaOpInMixedIdInSymbolLiteral,@scalaCommentCluster contained
 hi link scalaMixedIdInSymbolLiteral scalaSymbolLiteral
 
-syn region scalaOpInSymbolLiteral          start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@<=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
-syn region scalaOpInMixedIdInSymbolLiteral start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@<=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
+syn region scalaOpInSymbolLiteral          start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=scalaDelimiter,@scalaCommentCluster,@scalaPreParseCluster oneline contained
+syn region scalaOpInMixedIdInSymbolLiteral start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=scalaDelimiter,@scalaCommentCluster,@scalaPreParseCluster oneline contained
 
 hi link scalaOpInSymbolLiteral scalaSymbolLiteral
 hi link scalaOpInMixedIdInSymbolLiteral scalaSymbolLiteral
