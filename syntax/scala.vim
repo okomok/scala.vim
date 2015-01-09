@@ -133,7 +133,7 @@ syn keyword scalaMacro macro
 hi def link scalaMacro Macro
 
 " Type of Vim Standards
-syn keyword scalaStructure class extends forSome object package trait type
+syn keyword scalaStructure class extends forSome object package trait type with
 hi def link scalaStructure Structure
 
 " Modifiers
