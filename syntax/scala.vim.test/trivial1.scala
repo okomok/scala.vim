@@ -73,6 +73,10 @@ object UnicodeEscape {
     val \\\\u1533 // shall be broken
     val s = "\\u1532" // '\\' should win.
     val a\u1323d = b
+    val b = "\\u[a-fA-F0-9]" // \\ escapes
+    val ok = """\\ua""" // no escape
+    val err = """\u"""
+    val \u142 = err
 }
 
 object ReservedWordEscape {

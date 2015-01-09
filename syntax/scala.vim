@@ -52,7 +52,7 @@ else " TODO
 endif
 
 " Unicode Escape (SLS 1.0)
-syn match scalaUnicodeEscapeError "\\u" " fallback
+syn match scalaUnicodeEscapeError "\\\@<!\\u" " fallback
 syn match scalaUnicodeEscape "\\u\+[0-9A-Fa-f]\{4}"
 hi def link scalaUnicodeEscape SpecialChar
 hi link scalaUnicodeEscapeError scalaSyntaxError
