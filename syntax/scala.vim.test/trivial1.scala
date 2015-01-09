@@ -225,6 +225,8 @@ object FloatingPointLiterals {
 }
 
 object SymbolLiterals {
+    val k = 'abc.d
+    val k = 'abc+d
     val k = '\ // SLS accepts, but scalac doesn't.
     val separated = 'fa+
     val a = '++:\++
