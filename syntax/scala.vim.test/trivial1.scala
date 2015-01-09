@@ -8,14 +8,18 @@ package testfile
 import java.something.com
 
 private object ModifierTest {
-    // TODO
     case object x
     case class x
+    caseobject
+    caseclass
     case
+
         object x
+    
     case
         class x
-    private val i = x
+
+     private val i = x
 }
 
 object StandardTest {

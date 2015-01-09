@@ -94,7 +94,7 @@ hi def link scalaDelimiter Delimiter
 syntax region scalaBlockExpr matchgroup=scalaDelimiter start="{" end="}" fold contains=TOP
 
 " Reserved Words (SLS 1.1)
-syn keyword scalaReservedWord abstract case catch class def
+syn keyword scalaReservedWord abstract catch class def
 syn keyword scalaReservedWord do else extends false final
 syn keyword scalaReservedWord finally for forSome if implicit
 syn keyword scalaReservedWord import lazy match new null
@@ -109,37 +109,39 @@ hi def link scalaReservedWord Keyword
 syn match scalaReservedOp "\%([:=#@]\|=>\|<-\|<:\|<%\|>:\|\%u21d2\|\%u2190\)[!#%&*+-/:<=>?@\\^|~]\@!"
 hi def link scalaReservedOp Keyword
 
-" Modifiers
-syn keyword scalaModifier abstract case final sealed implicit lazy override
-syn keyword scalaAccessModifier private protected
-hi def link scalaModifier StorageClass
-hi def link scalaAccessModifier scalaModifier
-
 " Wildcard
 syn keyword scalaWildcard _
 hi def link scalaWildcard Keyword
 
-" Statement for Vim Standards
+" Statement of Vim Standards
 syn keyword scalaConditional else if
 hi def link scalaConditional Conditional
 syn keyword scalaRepeat do for while yield
 hi def link scalaRepeat Repeat
-syn keyword scalaLabel case match
+syn keyword scalaLabel match
+syn match scalaLabel "case\>" " keyword won't be beaten.
 hi def link scalaLabel Label
 syn keyword scalaException catch finally throw try
 hi def link scalaException Exception
 syn keyword scalaReturn return
 hi def link scalaReturn Statement
 
-" PreProc for Vim Standards
+" PreProc of Vim Standards
 syn keyword scalaImport import
 hi def link scalaImport Include
 syn keyword scalaMacro macro
 hi def link scalaMacro Macro
 
-" Type for Vim Standards
+" Type of Vim Standards
 syn keyword scalaStructure class extends forSome object package trait type
 hi def link scalaStructure Structure
+
+" Modifiers
+syn keyword scalaModifier abstract final sealed implicit lazy override
+syn match scalaModifier "case\%(\s\|\n\)*\%(\<object\>\|\<class\>\)\@="
+syn keyword scalaAccessModifier private protected
+hi def link scalaModifier StorageClass
+hi def link scalaAccessModifier scalaModifier
 
 " Comments
 syn cluster scalaCommentCluster contains=scalaSingleLineComment,scalaMultiLineComment
