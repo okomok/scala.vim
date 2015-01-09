@@ -253,7 +253,7 @@ syn cluster scalaProcessedStringEscapeCluster add=scalaEscape,scalaInvalidString
 
 syn match scalaEscape "\$" nextgroup=scalaEscapedId,scalaEscapedBlock contained
 " slightly different from scalaAlphaid for some reason
-syn match scalaEscapedId "[A-Za-z_]\%([A-Za-z_]\|[0-9]\)*" contained
+syn match scalaEscapedId "[A-Za-z_][A-Za-z_0-9]*" contained
 syn match scalaDollarEscape "\$\$" contained
 syn region scalaEscapedBlock matchgroup=scalaDelimiter start="{" end="}" contained contains=TOP keepend
 hi def link scalaEscape SpecialChar
