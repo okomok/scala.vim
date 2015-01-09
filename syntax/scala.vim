@@ -3,6 +3,7 @@
 " Maintainer: Shunsuke Sogame <okomok@gmail.com>
 " References:
 "   syntax/c.vim
+"   syntax/xml.vim
 "   Stefan Matthias Aust 2006
 "   https://github.com/derekwyatt/vim-scala
 
@@ -18,15 +19,16 @@ endif
 
 " Includes
 
-if exists("scala_has_xmlmode")
-    syntax case match
-    syntax include @scalaXml syntax/xml.vim
-    unlet b:current_syntax
-endif
-
 if exists("scaladoc_has_html")
     syntax case ignore
     syntax include @scalaHtml syntax/html.vim
+    unlet b:current_syntax
+endif
+
+if exists("scala_has_xmlmode")
+    syntax case match
+    let g:xml_syntax_folding=1 " enables xmlRegion.
+    syntax include @scalaXml syntax/xml.vim
     unlet b:current_syntax
 endif
 
@@ -355,6 +357,7 @@ syn match scaladocInheritdoc "@inheritdoc\>"
 hi def link scaladocInheritdoc scaladocTagCluster
 
 
-" XML mode (SLS 1.5) " TODO
-syn region scalaXmlMode start="[ \t({]\%(<\p\)\@=" end=".\@<=" end="$" contains=@scalaXml
-hi def link scalaXmlMode Normal
+" XML mode (SLS 1.5)
+syn cluster xmlRegionHook contains=scalaEscapedBlock
+syn cluster xmlStartTagHook contains=scalaEscapedBlock
+syn match scalaXmlMode +[ \t({]\%(<[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9]\)\@=+ nextgroup=@scalaXml
