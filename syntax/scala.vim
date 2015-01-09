@@ -232,11 +232,11 @@ hi def link scalaStringLiteral String
 " Single-line String Literals
 "   not extended for better Error highlighting.
 syn region scalaSingleLineStringLiteral start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@scalaPreParseCluster,scalaCharEscape keepend oneline
-hi def link scalaSingleLineStringLiteral String
+hi def link scalaSingleLineStringLiteral scalaStringLiteral
 
 " Multi-line String Literals - shall ignore scalaCharEscape.
 syn region scalaMultiLineStringLiteral start=/"""/ end=/""""\@!/ contains=@scalaPreParseCluster keepend fold
-hi def link scalaMultiLineStringLiteral String
+hi def link scalaMultiLineStringLiteral scalaStringLiteral
 
 
 " Processed String Literals (SIP-11) - shall ignore scalaCharEscape.
