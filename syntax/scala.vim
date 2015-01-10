@@ -4,6 +4,7 @@
 " References:
 "   http://www.scala-lang.org/files/archive/spec/2.11/
 "   http://docs.scala-lang.org/sips/pending/string-interpolation.html 
+"   https://wiki.scala-lang.org/display/SW/Scaladoc
 "   syntax/c.vim
 "   syntax/xml.vim
 "   Stefan Matthias Aust 2006
@@ -149,13 +150,13 @@ syn match scalaSingleLineComment "//.*" contains=@scalaCommentBodyCluster
 hi def link scalaSingleLineComment scalaComment
 
 " Multi-line Comments (SLS 1.4) - can be nested.
-syn region scalaMultiLineComment start="/\*" end="\*/" contains=scalaMultiLineComment,@scalaCommentBodyCluster extend fold
+syn region scalaMultiLineComment start="/\*" end="\*/" contains=scalaMultiLineComment,@scalaCommentBodyCluster keepend extend fold
 hi def link scalaMultiLineComment scalaComment
 
-" Commentdoc - obsolete or not
+" Commentdoc
 syn cluster scalaCommentdocCluster contains=scalaCommentdocTodo,scalaCommentdocTag
 syn keyword scalaCommentdocTodo TODO FIXME XXX contained
-syn match scalaCommentdocTag "\%(\%(^\|/\*\|//\)\s\+\)\@<=[A-Za-z][A-Za-z0-9+.-]*:\s" " like a URI scheme
+syn match scalaCommentdocTag "\%(\%(/\*\|^\%(\s*\*\)*\|//\)\s*\)\@<=[A-Za-z][A-Za-z0-9+.-]*:\s" contained " like a URI scheme
 hi def link scalaCommentdocTodo Todo
 hi def link scalaCommentdocTag SpecialComment
 
@@ -267,21 +268,20 @@ hi def link scalaStandardType Type
 
 " Scaladoc (https://wiki.scala-lang.org/display/SW/Scaladoc)
 
-syn region scaladoc start="/\*\*/\@!" end="\*/" contains=@scaladocBodyCluster keepend fold
+syn match scaladocStart "/\*\*\@=" nextgroup=scaladoc
+syn region scaladoc start="\*\@<=" end="\*/" contains=@scaladocBodyCluster keepend fold contained
+hi link scaladocStart scaladoc
 hi def link scaladoc scalaMultiLineComment
-syn cluster scaladocBodyCluster contains=@scaladocNonBlockElementCluster,scaladocLeftMerginal,@Spell
-syn cluster scaladocNonBlockElementCluster contains=@scaladocInlineElementCluster,scaladocCodeBlock,scaladocMultiLineComment,scaladocEscape,@scalaHtml
+syn cluster scaladocBodyCluster contains=scaladocLeftMerginal,scaladocCodeBlock,@scaladocInlineElementCluster,@scaladocPreParseCluster,@scalaHtml,@Spell
 
-" Keep normal multi-line comments away, otherwise eaten up.
-syn region scaladocMultiLineComment start="/\*\*\@!"       end="/*/" contains=scaladocMultiLineComment keepend extend contained fold
-syn region scaladocMultiLineComment start="[^/*]/\*\*/\@!" end="\*/" contains=scaladocMultiLineComment keepend extend contained fold
-hi def link scaladocMultiLineComment scalaMultiLineComment
+syn match scaladocLeftMergin "^\s*\*\%(\s\+\|$\)" contained " fallback
+hi link scaladocLeftMergin scaladoc
 
 " Before parsing
-syn cluster scaladocPreParseCluster contains=scaladocEscape,scalaMultiLineComment,scaladocCodeBlockLeftMergin
+syn cluster scaladocPreParseCluster contains=scaladocEscape,scalaMultiLineComment,scaladocLeftMergin
 
 " Scaladoc Escape
-"   $scalaEscapedID seems good.
+"   $scalaEscapedId seems good.
 syn match scaladocEscape _\$[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9$][^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"$]*_ contained
 hi def link scaladocEscape SpecialComment
 
@@ -307,8 +307,10 @@ syn region scaladocExternalLink matchgroup=scaladocInlineElement start="\[\[\%([
 hi def link scaladocExternalLink Underlined
 
 " Start of Block Elements, Tags or Annotations
-syn match scaladocLeftMerginal "\%(/\*\*\s*\|^\%(\s*\*\)\+\%(\s\+\|$\)\)" nextgroup=@scaladocTagCluster,@scaladocBlockElementCluster contained
-hi def link scaladocLeftMerginal scaladoc
+syn match scaladocLeftMerginal "^\s*\*\%(\s\+\|$\)" nextgroup=@scaladocLeftMerginalCluster contained
+syn match scaladocLeftMerginal "\%(/\*\*\)\@<=\s\+" nextgroup=@scaladocLeftMerginalCluster contained " bless you.
+syn cluster scaladocLeftMerginalCluster contains=@scaladocTagCluster,@scaladocBlockElementCluster
+hi link scaladocLeftMerginal scaladoc
 
 
 " Scaladoc Block Elements (https://wiki.scala-lang.org/display/SW/Syntax)
@@ -316,7 +318,7 @@ hi def link scaladocLeftMerginal scaladoc
 syn cluster scaladocBlockElementCluster contains=scaladocListBlockStart,scaladocHeading
 hi def link scaladocBlockElementCluster SpecialComment
 
-syn region scaladocHeading matchgroup=scaladocHeadingQuote start="=\+" end="=\+" contains=@scaladocNonBlockElementCluster contained keepend oneline
+syn region scaladocHeading matchgroup=scaladocHeadingQuote start="=\+" end="=\+" contains=@scaladocBodyCluster contained keepend oneline
 hi def link scaladocHeadingQuote SpecialComment
 hi def link scaladocHeading scaladoc
 
@@ -327,8 +329,6 @@ hi def link scaladocListBlockStart SpecialComment
 
 " Scaladoc Code Block
 syn region scaladocCodeBlock matchgroup=SpecialComment start="{{{" end="}}}" contains=@scaladocPreParseCluster contained keepend
-syn match scaladocCodeBlockLeftMergin "^\%(\s*\*\)\+\%(\s\+\|$\)" contained
-hi def link scaladocCodeBlockLeftMergin scaladoc
 hi def link scaladocCodeBlock Normal
 
 

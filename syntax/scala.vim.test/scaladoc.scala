@@ -1,4 +1,18 @@
 
+/***/
+/**/
+def closed() = 0
+
+
+/**
+ *
+ * /**
+  *
+  * *
+  */
+ */
+def nested() = 0
+
 /**
  * @define COLL a
  * @throws My.T hello $COLL
@@ -11,7 +25,7 @@
 def hello = ()
 
 /**
- * `hell*/
+ * `uncolsed-quote */ 
 def ok()
 
 
@@ -52,12 +66,12 @@ def hello = 3 * 2
 /*
  * /*i*/
 */
-nested
+def nested() = 0
 
 /**
  * /*i */
 */
-nested
+def nested() = 0
 
     /**
      * @param i hello /* nested */
@@ -68,7 +82,7 @@ nested
      *  */
      * 
      **/
-    hello
+    def hello() = 0
 
 /** ==hello==
  * ===hello `world` {{{ throw new () }}} ===
@@ -101,11 +115,11 @@ def document: Nothing
 
 // shall be nested comment
 /**
- * `
+ * ` unclosed /* `
  * ` __color__
- * ` __color__/**` // ` is colored...compromise...
+ * _
  */
-def hello
+def hello `
 */
 
 
@@ -144,14 +158,14 @@ def hello() }}}
   * {{{
   * 
   * /**
-  *  * @param i hello // scaladoc! who needs. 
+  *  * @param i hello // no longer scaladoc! who needs. 
   *  * {{{
   *  *     s"hello $x"
   *  * }}}
   *  */
   * object Hello {
   *   /**
-  *     * @param i hello // scaladoc! who needs
+  *     * @param i hello // no longer scaladoc! who needs
   *     */
   *     val x = foo(): Int // hello
   *     val c = 'a'
@@ -172,7 +186,7 @@ def hello() }}}
   * }
   * }}}
   *
-  * * @param i wrongly scaladoc...
+  * * @param i not a scaladoc
   *
   *
   * In the near future, wiki syntax will also support bullet or number lists as
@@ -245,6 +259,9 @@ class B extends A {
  * - we leave the "@return" statement alone, it will be inherited anyway
  *
  * As you can see, variables are orthogonal to the problem: they are always updated
+ *
+ * [[http:hello.com hello]]
+ * [[ftp:hello.com]]
  */
 
  /**
