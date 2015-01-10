@@ -278,7 +278,8 @@ syn match scaladocLeftMergin "^\s*\*\%(\s\+\|$\)" contained " fallback
 hi link scaladocLeftMergin scaladoc
 
 " vs. @scalaHtml
-syn match scaladocNotHtml "\%(>\)\@=" contained
+syn match scaladocNotHtml "\%([>&]\)\@=" contained
+syn match scaladocNotHtml "\%(<$\)\@=" contained
 syn match scaladocNotHtml _\%(<[ \t()[\]{}.;,!#%&*+\-:<=>?@\\^|~'"0-9]\)\@=_ contained
 
 
