@@ -67,15 +67,14 @@ hi link scalaUnicodeEscapeError scalaSyntaxError
 syn cluster scalaIdCluster contains=scalaMixedId,scalaOp,scalaReservedOp,scalaLiteralId
 
 " Mixed Identifiers
-syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"]*$  nextgroup=scalaProcessedStringLiteralElement
-syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"]*_$ nextgroup=scalaOpInMixedId,scalaProcessedStringLiteralElement
+syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"]*$  nextgroup=scalaProcessedStringLiteralElement
+syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"]*_$ nextgroup=scalaOpInMixedId,scalaProcessedStringLiteralElement
 hi def link scalaMixedId Identifier
 
 " Operator-only Identifiers
 "   extended and ends immediately.
-" NOTE: `.` would match without scalaDelimiter contained. Why?
-syn region scalaOp          start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=scalaDelimiter,@scalaCommentCluster,@scalaPreParseCluster oneline
-syn region scalaOpInMixedId start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=scalaDelimiter,@scalaCommentCluster,@scalaPreParseCluster nextgroup=scalaProcessedStringLiteralElement oneline contained
+syn region scalaOp          start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline
+syn region scalaOpInMixedId start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster nextgroup=scalaProcessedStringLiteralElement oneline contained
 hi def link scalaOp Operator
 hi def link scalaOpInMixedId scalaMixedId
 
@@ -101,7 +100,7 @@ syn keyword scalaReservedWord macro
 hi def link scalaReservedWord Keyword
 
 " Reserved Operators (SLS 1.1)
-syn match scalaReservedOp "\%([:=#@]\|=>\|<-\|<:\|<%\|>:\|\%u21d2\|\%u2190\)[!#%&*+-/:<=>?@\\^|~]\@!"
+syn match scalaReservedOp "\%([:=#@]\|=>\|<-\|<:\|<%\|>:\|\%u21d2\|\%u2190\)[!#%&*+\-/:<=>?@\\^|~]\@!"
 hi def link scalaReservedOp Keyword
 
 " Wildcard
@@ -187,12 +186,12 @@ hi def link scalaSymbolLiteral Constant
 syn match scalaSymbolLiteral "'/"   nextgroup=scalaOpInSymbolLiteral
 syn match scalaSymbolLiteral "'/\*" nextgroup=scalaOpInSymbolLiteral
 
-syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"]*$  contained
-syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"]*_$ nextgroup=scalaOpInMixedIdInSymbolLiteral,@scalaCommentCluster contained
+syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"]*$  contained
+syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"]*_$ nextgroup=scalaOpInMixedIdInSymbolLiteral,@scalaCommentCluster contained
 hi link scalaMixedIdInSymbolLiteral scalaSymbolLiteral
 
-syn region scalaOpInSymbolLiteral          start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=scalaDelimiter,@scalaCommentCluster,@scalaPreParseCluster oneline contained
-syn region scalaOpInMixedIdInSymbolLiteral start="[!#%&*+-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=scalaDelimiter,@scalaCommentCluster,@scalaPreParseCluster oneline contained
+syn region scalaOpInSymbolLiteral          start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
+syn region scalaOpInMixedIdInSymbolLiteral start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
 
 hi link scalaOpInSymbolLiteral scalaSymbolLiteral
 hi link scalaOpInMixedIdInSymbolLiteral scalaSymbolLiteral
@@ -250,14 +249,14 @@ hi def link scalaProcessedStringLiteralElement scalaStringLiteral
 syn cluster scalaProcessedStringEscapeCluster add=scalaEscape,scalaInvalidStringInterpolationError,scalaDollarEscape,@scalaPreParseCluster
 syn match scalaEscape "\$" nextgroup=scalaEscapedId,scalaEscapedBlock contained
 " not same as scalaMixedId for some reason
-syn match scalaEscapedId _[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9$][^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"$]*_ contained
+syn match scalaEscapedId _[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9$][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"$]*_ contained
 syn match scalaDollarEscape "\$\$" contained
 syn region scalaEscapedBlock matchgroup=scalaDelimiter start="{" end="}" contained contains=TOP keepend
 hi def link scalaEscape SpecialChar
 hi def link scalaEscapedId scalaMixedId
 hi def link scalaDollarEscape SpecialChar
 
-syn match scalaInvalidStringInterpolationError "\$[ \t()[\]}.;,!#%&*+-/:<=>?@\\^|~'"0-9]\@=" contained
+syn match scalaInvalidStringInterpolationError "\$[ \t()[\]}.;,!#%&*+\-/:<=>?@\\^|~'"0-9]\@=" contained
 hi def link scalaInvalidStringInterpolationError scalaSyntaxError
 
 
@@ -272,17 +271,23 @@ syn match scaladocStart "/\*\*\@=" nextgroup=scaladoc
 syn region scaladoc start="\*\@<=" end="\*/" contains=@scaladocBodyCluster keepend fold contained
 hi link scaladocStart scaladoc
 hi def link scaladoc scalaMultiLineComment
-syn cluster scaladocBodyCluster contains=scaladocLeftMerginal,scaladocCodeBlock,@scaladocInlineElementCluster,@scaladocPreParseCluster,@scalaHtml,@Spell
+syn cluster scaladocBodyCluster contains=scaladocLeftMerginal,scaladocCodeBlock,@scaladocInlineElementCluster,@scaladocPreParseCluster,
+    \ @scalaHtml,@Spell,scaladocNotHtml
 
 syn match scaladocLeftMergin "^\s*\*\%(\s\+\|$\)" contained " fallback
 hi link scaladocLeftMergin scaladoc
+
+" vs. @scalaHtml
+syn match scaladocNotHtml "\%(>\)\@=" contained
+syn match scaladocNotHtml _\%(<[ \t()[\]{}.;,!#%&*+\-:<=>?@\\^|~'"0-9]\)\@=_ contained
+
 
 " Before parsing
 syn cluster scaladocPreParseCluster contains=scaladocEscape,scalaMultiLineComment,scaladocLeftMergin
 
 " Scaladoc Escape
 "   $scalaEscapedId seems good.
-syn match scaladocEscape _\$[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9$][^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"$]*_ contained
+syn match scaladocEscape _\$[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9$][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"$]*_ contained
 hi def link scaladocEscape SpecialComment
 
 " Scaladoc Inline Elements (https://wiki.scala-lang.org/display/SW/Syntax)
@@ -373,4 +378,4 @@ hi def link scaladocInheritdoc scaladocTagCluster
 " XML mode (SLS 1.5)
 syn cluster xmlRegionHook contains=scalaEscapedBlock
 syn cluster xmlStartTagHook contains=scalaEscapedBlock
-syn match scalaXmlMode +[ \t({]\%(<[^ \t()[\]{}.;,!#%&*+-/:<=>?@\\^|~'"0-9]\)\@=+ nextgroup=@scalaXml
+syn match scalaXmlMode _[ \t({]\%(<[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9]\)\@=_ nextgroup=@scalaXml
