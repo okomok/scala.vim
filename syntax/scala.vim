@@ -278,11 +278,13 @@ syn cluster scaladocBodyCluster contains=scaladocLeftMerginal,scaladocCodeBlock,
 syn match scaladocLeftMergin "^\s*\*\%(\s\+\|$\)" contained " fallback
 hi link scaladocLeftMergin scaladoc
 
-" suppress @scaladocHtml errors.
-syn match scaladocNotHtml ">\@=" contained
-syn match scaladocNotHtml "\%(&\%(#\=[0-9A-Za-z]\{1,8};\)\@!\)\@=" contained
-syn match scaladocNotHtml "\%(<$\)\@=" contained
-syn match scaladocNotHtml _\%(<[ \t()[\]{}.;,!#%&*+\-:<=>?@\\^|~'"0-9]\)\@=_ contained
+if exists("scaladoc_has_html")
+    " suppress @scaladocHtml errors.
+    syn match scaladocNotHtml ">\@=" contained
+    syn match scaladocNotHtml "\%(&\%(#\=[0-9A-Za-z]\{1,8};\)\@!\)\@=" contained
+    syn match scaladocNotHtml "\%(<$\)\@=" contained
+    syn match scaladocNotHtml _\%(<[ \t()[\]{}.;,!#%&*+\-:<=>?@\\^|~'"0-9]\)\@=_ contained
+endif
 
 
 " Before parsing
