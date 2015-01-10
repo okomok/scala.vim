@@ -19,6 +19,9 @@ private object ModifierTest {
     case
         class x
 
+   case /*no way*/
+       class x
+
      private val i = x
 }
 

@@ -53,7 +53,7 @@ hi def link scalaSyntaxError Error
 " Escape before parsing
 if !exists("scala_scaladocmode")
     syn cluster scalaPreParseCluster contains=scalaUnicodeEscape,scalaUnicodeEscapeError
-else " TODO
+else " TODO or not TODO
     syn cluster scalaPreParseCluster contains=@scaladocPreParseCluster
 endif
 
@@ -310,7 +310,7 @@ hi def link scaladocExternalLink Underlined
 syn match scaladocLeftMerginal "^\s*\*\%(\s\+\|$\)" nextgroup=@scaladocLeftMerginalCluster contained
 syn match scaladocLeftMerginal "\%(/\*\*\)\@<=\s\+" nextgroup=@scaladocLeftMerginalCluster contained " bless you.
 syn cluster scaladocLeftMerginalCluster contains=@scaladocTagCluster,@scaladocBlockElementCluster
-hi link scaladocLeftMerginal scaladoc
+hi link scaladocLeftMerginal scaladocLeftMergin
 
 
 " Scaladoc Block Elements (https://wiki.scala-lang.org/display/SW/Syntax)
