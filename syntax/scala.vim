@@ -6,6 +6,7 @@
 "   http://docs.scala-lang.org/sips/pending/string-interpolation.html 
 "   https://wiki.scala-lang.org/display/SW/Scaladoc
 "   syntax/c.vim
+"   syntax/html.vim
 "   syntax/xml.vim
 "   Stefan Matthias Aust 2006
 "   https://github.com/derekwyatt/vim-scala
@@ -25,7 +26,7 @@ endif
 
 if exists("scaladoc_has_html")
     syntax case ignore
-    syntax include @scalaHtml syntax/html.vim
+    syntax include @scaladocHtml syntax/html.vim
     unlet b:current_syntax
 endif
 
@@ -272,13 +273,14 @@ syn region scaladoc start="\*\@<=" end="\*/" contains=@scaladocBodyCluster keepe
 hi link scaladocStart scaladoc
 hi def link scaladoc scalaMultiLineComment
 syn cluster scaladocBodyCluster contains=scaladocLeftMerginal,scaladocCodeBlock,@scaladocInlineElementCluster,@scaladocPreParseCluster,
-    \ @scalaHtml,@Spell,scaladocNotHtml
+    \ @scaladocHtml,@Spell,scaladocNotHtml
 
 syn match scaladocLeftMergin "^\s*\*\%(\s\+\|$\)" contained " fallback
 hi link scaladocLeftMergin scaladoc
 
-" vs. @scalaHtml
-syn match scaladocNotHtml "\%([>&]\)\@=" contained
+" suppress @scaladocHtml errors.
+syn match scaladocNotHtml ">\@=" contained
+syn match scaladocNotHtml "\%(&\%(#\=[0-9A-Za-z]\{1,8};\)\@!\)\@=" contained
 syn match scaladocNotHtml "\%(<$\)\@=" contained
 syn match scaladocNotHtml _\%(<[ \t()[\]{}.;,!#%&*+\-:<=>?@\\^|~'"0-9]\)\@=_ contained
 
