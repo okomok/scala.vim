@@ -289,17 +289,17 @@ hi def link scaladocEscape SpecialComment
 syn cluster scaladocInlineElementCluster contains=scaladocItalic,scaladocBold,scaladocUnderline,scaladocMonospace,scaladocSuperscript,
     \ scaladocSubscript,scaladocEntityLink,scaladocExternalLink
 hi def link scaladocInlineElement SpecialComment
-syn region scaladocItalic start="''" end="''" contains=@scaladocPreParseCluster contained keepend
+syn region scaladocItalic start="''" end="'''\@!" contains=@scaladocPreParseCluster contained keepend
 hi def link scaladocItalic scaladocInlineElement
-syn region scaladocBold start="'''" end="'''" contains=@scaladocPreParseCluster contained keepend
+syn region scaladocBold start="'''" end="''''\@!" contains=@scaladocPreParseCluster contained keepend
 hi def link scaladocBold scaladocInlineElement
-syn region scaladocUnderline start="__" end="__" contains=@scaladocPreParseCluster contained keepend
+syn region scaladocUnderline start="__" end="___\@!" contains=@scaladocPreParseCluster contained keepend
 hi def link scaladocUnderline scaladocInlineElement
-syn region scaladocMonospace start="`" end="`" contains=@scaladocPreParseCluster contained keepend
+syn region scaladocMonospace start="`" end="``\@!" contains=@scaladocPreParseCluster contained keepend
 hi def link scaladocMonospace scaladocInlineElement
-syn region scaladocSuperscript start="\^" end="\^" contains=@scaladocPreParseCluster contained keepend
+syn region scaladocSuperscript start="\^" end="\^\^\@!" contains=@scaladocPreParseCluster contained keepend
 hi def link scaladocSuperscript scaladocInlineElement
-syn region scaladocSubscript start=",," end=",," contains=@scaladocPreParseCluster contained keepend
+syn region scaladocSubscript start=",," end=",,,\@!" contains=@scaladocPreParseCluster contained keepend
 hi def link scaladocSubscript scaladocInlineElement
 syn region scaladocEntityLink start="\[\[" end="\]\]" contains=@scaladocPreParseCluster contained keepend
 hi def link scaladocEntityLink scaladocInlineElement

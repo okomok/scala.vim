@@ -5,6 +5,18 @@ def closed() = 0
 
 
 /**
+ * z ,,abc,,, // woh?
+ * z __abc__
+ * z ___abc___ de
+ * z ''abc''
+ * z '''abc'''
+ * z ''''abc''''
+ * z '''''abc'''''
+ * closed
+ */
+
+
+/**
  *
  * /**
   *
