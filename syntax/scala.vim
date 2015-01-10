@@ -2,10 +2,13 @@
 " Language: Scala
 " Maintainer: Shunsuke Sogame <okomok@gmail.com>
 " References:
+"   http://www.scala-lang.org/files/archive/spec/2.11/
+"   http://docs.scala-lang.org/sips/pending/string-interpolation.html 
 "   syntax/c.vim
 "   syntax/xml.vim
 "   Stefan Matthias Aust 2006
 "   https://github.com/derekwyatt/vim-scala
+"   http://blog.dieweltistgarnichtso.net/constructing-a-regular-expression-that-matches-uris
 
 
 " Preamble
@@ -134,21 +137,28 @@ syn keyword scalaAccessModifier private protected
 hi def link scalaModifier StorageClass
 hi def link scalaAccessModifier scalaModifier
 
+
 " Comments
+
 syn cluster scalaCommentCluster contains=scalaSingleLineComment,scalaMultiLineComment
+hi def link scalaComment Comment
+syn cluster scalaCommentBodyCluster contains=@scalaCommentdocCluster,@Spell
 
 " Single-line Comments (SLS 1.4)
-syn match scalaSingleLineComment "//.*" contains=@scalaCommentdocCluster
-hi def link scalaSingleLineComment Comment
+syn match scalaSingleLineComment "//.*" contains=@scalaCommentBodyCluster
+hi def link scalaSingleLineComment scalaComment
 
 " Multi-line Comments (SLS 1.4) - can be nested.
-syn region scalaMultiLineComment start="/\*" end="\*/" contains=scalaMultiLineComment,@scalaCommentdocCluster extend fold
-hi def link scalaMultiLineComment scalaSingleLineComment
+syn region scalaMultiLineComment start="/\*" end="\*/" contains=scalaMultiLineComment,@scalaCommentBodyCluster extend fold
+hi def link scalaMultiLineComment scalaComment
 
 " Commentdoc - obsolete or not
-syn cluster scalaCommentdocCluster contains=scalaCommentdocTag
-syn keyword scalaCommentdocTag TODO FIXME XXX NOTE contained
-hi def link scalaCommentdocTag Todo
+syn cluster scalaCommentdocCluster contains=scalaCommentdocTodo,scalaCommentdocTag
+syn keyword scalaCommentdocTodo TODO FIXME XXX contained
+syn match scalaCommentdocTag "\%(\%(^\|/\*\|//\)\s\+\)\@<=[A-Za-z][A-Za-z0-9+.-]*:\s" " like a URI scheme
+hi def link scalaCommentdocTodo Todo
+hi def link scalaCommentdocTag SpecialComment
+
 
 " Integer Literals (SLS 1.3.1)
 syn match scalaIntegerLiteral "\%(0\|\%([1-9]\%(0\|[1-9]\)*\)\)[Ll]\=\>"
@@ -259,7 +269,7 @@ hi def link scalaStandardType Type
 
 syn region scaladoc start="/\*\*/\@!" end="\*/" contains=@scaladocBodyCluster keepend fold
 hi def link scaladoc scalaMultiLineComment
-syn cluster scaladocBodyCluster contains=@scaladocNonBlockElementCluster,scaladocLeftMerginal
+syn cluster scaladocBodyCluster contains=@scaladocNonBlockElementCluster,scaladocLeftMerginal,@Spell
 syn cluster scaladocNonBlockElementCluster contains=@scaladocInlineElementCluster,scaladocCodeBlock,scaladocMultiLineComment,scaladocEscape,@scalaHtml
 
 " Keep normal multi-line comments away, otherwise eaten up.

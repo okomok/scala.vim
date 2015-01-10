@@ -140,9 +140,14 @@ object SingleLineComments {
 
     val z = 'fa+ 3 // ' fa + 3 comment
     val k = "fa + 3 // " fa + 3 // no comment
+    // NOTE: HELLO FIXME 
 }
 
 object MultiLineComments {
+    /*  note: hello */
+    /*
+     note: hello FIXME
+     */
     val x /**/ = 0
     val y = /*lookma*/0
 
