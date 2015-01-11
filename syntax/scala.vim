@@ -10,6 +10,7 @@
 "   syntax/xml.vim
 "   Stefan Matthias Aust 2006
 "   https://github.com/derekwyatt/vim-scala
+"   http://www.tutorialspoint.com/scala/scala_basic_syntax.htm
 "   http://blog.dieweltistgarnichtso.net/constructing-a-regular-expression-that-matches-uris
 
 
@@ -62,26 +63,33 @@ endif
 syn match scalaUnicodeEscapeError "\\\@<!\\u" " fallback
 syn match scalaUnicodeEscape "\\u\+[0-9A-Fa-f]\{4}"
 hi def link scalaUnicodeEscape SpecialChar
-hi link scalaUnicodeEscapeError scalaSyntaxError
+hi def link scalaUnicodeEscapeError scalaSyntaxError
+
 
 " Identifiers
-syn cluster scalaIdCluster contains=scalaMixedId,scalaOp,scalaReservedOp,scalaLiteralId
+
+syn cluster scalaIdCluster contains=scalaAlphaId,scalaMixedId,scalaOp,scalaReservedOp,scalaLiteralId
+hi def link scalaNonOpId Identifier
+
+" Alphanumeric Identifiers
+syn match scalaAlphaId $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*$  nextgroup=scalaProcessedStringLiteralElement
+hi def link scalaAlphaId scalaNonOpId
 
 " Mixed Identifiers
-syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*$  nextgroup=scalaProcessedStringLiteralElement
-syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*_$ nextgroup=scalaOpInMixedId,scalaProcessedStringLiteralElement
-hi def link scalaMixedId Identifier
+syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*_[!#%&*+\-/:<=>?@\\^|~]\@=\%(//\|/\*\)\@!$ nextgroup=scalaOpInMixedId,scalaProcessedStringLiteralElement
+hi def link scalaMixedId scalaNonOpId
 
 " Operator-only Identifiers
 "   extended and ends immediately.
 syn region scalaOp          start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline
 syn region scalaOpInMixedId start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster nextgroup=scalaProcessedStringLiteralElement oneline contained
 hi def link scalaOp Operator
-hi def link scalaOpInMixedId scalaMixedId
+hi link scalaOpInMixedId scalaMixedId
 
 " Literal Identifiers (SLS 1.1.2)
 syn region scalaLiteralId start="`" end="`" contains=scalaCharEscape,@scalaPreParseCluster oneline keepend
-hi def link scalaLiteralId scalaMixedId
+hi def link scalaLiteralId scalaNonOpId
+
 
 " Delimiters
 syn match scalaDelimiter "[()[\]{}.;,]"
@@ -178,7 +186,7 @@ syn keyword scalaBooleanLiteral true false
 hi def link scalaBooleanLiteral Keyword
 
 
-" Symbol Literals (SLS 1.3.7) - 'scalaMixedId and 'scalaOp; placed before Character Literals
+" Symbol Literals (SLS 1.3.7) - 'scalaIdentifier and 'scalaOp; placed before Character Literals
 
 syn match scalaSymbolLiteral "'" nextgroup=scalaMixedIdInSymbolLiteral,scalaOpInSymbolLiteral
 hi def link scalaSymbolLiteral Constant
@@ -202,7 +210,7 @@ hi link scalaOpInMixedIdInSymbolLiteral scalaSymbolLiteral
 syn match scalaUnclosedCharacterLiteralError "'$"
 syn match scalaUnclosedCharacterLiteralError "'\s\@="
 syn match scalaUnclosedCharacterLiteralError "'\\\%(u\+[0-9A-Fa-f]\{4}\)\@!" " optimistic
-hi link scalaUnclosedCharacterLiteralError scalaSyntaxError
+hi def link scalaUnclosedCharacterLiteralError scalaSyntaxError
 syn match scalaCharacterLiteral /'\p'/
 syn match scalaCharacterLiteral              /'\%(\\[btnfr"'\\]'\)\@=/
 syn match scalaCharacterLiteral              /\%('\\[btnfr"'\\]\)\@<='/
@@ -249,13 +257,15 @@ hi def link scalaProcessedStringLiteralElement scalaStringLiteral
 
 syn cluster scalaProcessedStringEscapeCluster add=scalaEscape,scalaInvalidStringInterpolationError,scalaDollarEscape,@scalaPreParseCluster
 syn match scalaEscape "\$" nextgroup=scalaEscapedId,scalaEscapedBlock contained
-" not same as scalaMixedId for some reason
+
+" scalaAlphaId except for `$`
 syn match scalaEscapedId _[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9$][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`$]*_ contained
+
 syn match scalaDollarEscape "\$\$" contained
 syn region scalaEscapedBlock matchgroup=scalaDelimiter start="{" end="}" contained contains=TOP keepend
-hi def link scalaEscape SpecialChar
-hi def link scalaEscapedId scalaMixedId
-hi def link scalaDollarEscape SpecialChar
+hi def link scalaEscape scalaCharEscape
+hi def link scalaEscapedId scalaAlphaId
+hi def link scalaDollarEscape scalaCharEscape
 
 syn match scalaInvalidStringInterpolationError "\$[ \t()[\]}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9]\@=" contained
 hi def link scalaInvalidStringInterpolationError scalaSyntaxError

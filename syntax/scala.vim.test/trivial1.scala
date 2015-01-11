@@ -43,9 +43,14 @@ object StandardTest {
 }
 
 object Identifier {
+    val _x = 0
+    val __x = 0
+    val _x_ = 0
+    val __% = 0
     val x = @@.^
     val x = @@^a+b
     val x = A_@@.^
+    val A_ = 0
     val A_/* comment */ =3l
     val -*-*/* comment */ = 3
     val **// comment
