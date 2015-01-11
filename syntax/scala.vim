@@ -68,8 +68,8 @@ hi link scalaUnicodeEscapeError scalaSyntaxError
 syn cluster scalaIdCluster contains=scalaMixedId,scalaOp,scalaReservedOp,scalaLiteralId
 
 " Mixed Identifiers
-syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"]*$  nextgroup=scalaProcessedStringLiteralElement
-syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"]*_$ nextgroup=scalaOpInMixedId,scalaProcessedStringLiteralElement
+syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*$  nextgroup=scalaProcessedStringLiteralElement
+syn match scalaMixedId $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*_$ nextgroup=scalaOpInMixedId,scalaProcessedStringLiteralElement
 hi def link scalaMixedId Identifier
 
 " Operator-only Identifiers
@@ -187,8 +187,8 @@ hi def link scalaSymbolLiteral Constant
 syn match scalaSymbolLiteral "'/"   nextgroup=scalaOpInSymbolLiteral
 syn match scalaSymbolLiteral "'/\*" nextgroup=scalaOpInSymbolLiteral
 
-syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"]*$  contained
-syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"]*_$ nextgroup=scalaOpInMixedIdInSymbolLiteral,@scalaCommentCluster contained
+syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*$  contained
+syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*_$ nextgroup=scalaOpInMixedIdInSymbolLiteral,@scalaCommentCluster contained
 hi link scalaMixedIdInSymbolLiteral scalaSymbolLiteral
 
 syn region scalaOpInSymbolLiteral          start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
@@ -250,14 +250,14 @@ hi def link scalaProcessedStringLiteralElement scalaStringLiteral
 syn cluster scalaProcessedStringEscapeCluster add=scalaEscape,scalaInvalidStringInterpolationError,scalaDollarEscape,@scalaPreParseCluster
 syn match scalaEscape "\$" nextgroup=scalaEscapedId,scalaEscapedBlock contained
 " not same as scalaMixedId for some reason
-syn match scalaEscapedId _[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9$][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"$]*_ contained
+syn match scalaEscapedId _[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9$][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`$]*_ contained
 syn match scalaDollarEscape "\$\$" contained
 syn region scalaEscapedBlock matchgroup=scalaDelimiter start="{" end="}" contained contains=TOP keepend
 hi def link scalaEscape SpecialChar
 hi def link scalaEscapedId scalaMixedId
 hi def link scalaDollarEscape SpecialChar
 
-syn match scalaInvalidStringInterpolationError "\$[ \t()[\]}.;,!#%&*+\-/:<=>?@\\^|~'"0-9]\@=" contained
+syn match scalaInvalidStringInterpolationError "\$[ \t()[\]}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9]\@=" contained
 hi def link scalaInvalidStringInterpolationError scalaSyntaxError
 
 
@@ -283,7 +283,7 @@ if exists("scaladoc_has_html")
     syn match scaladocNotHtml ">\@=" contained
     syn match scaladocNotHtml "\%(&\%(#\=[0-9A-Za-z]\{1,8};\)\@!\)\@=" contained
     syn match scaladocNotHtml "\%(<$\)\@=" contained
-    syn match scaladocNotHtml _\%(<[ \t()[\]{}.;,!#%&*+\-:<=>?@\\^|~'"0-9]\)\@=_ contained
+    syn match scaladocNotHtml _\%(<[ \t()[\]{}.;,!#%&*+\-:<=>?@\\^|~'"`0-9]\)\@=_ contained
 endif
 
 
@@ -292,7 +292,7 @@ syn cluster scaladocPreParseCluster contains=scaladocEscape,scalaMultiLineCommen
 
 " Scaladoc Escape
 "   $scalaEscapedId seems good.
-syn match scaladocEscape _\$[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9$][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"$]*_ contained
+syn match scaladocEscape _\$[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9$][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`$]*_ contained
 hi def link scaladocEscape SpecialComment
 
 " Scaladoc Inline Elements (https://wiki.scala-lang.org/display/SW/Syntax)
@@ -383,4 +383,4 @@ hi def link scaladocInheritdoc scaladocTagCluster
 " XML mode (SLS 1.5)
 syn cluster xmlRegionHook contains=scalaEscapedBlock
 syn cluster xmlStartTagHook contains=scalaEscapedBlock
-syn match scalaXmlMode _[ \t({]\%(<[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"0-9]\)\@=_ nextgroup=@scalaXml
+syn match scalaXmlMode _[ \t({]\%(<[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9]\)\@=_ nextgroup=@scalaXml
