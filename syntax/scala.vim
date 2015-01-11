@@ -186,24 +186,24 @@ syn keyword scalaBooleanLiteral true false
 hi def link scalaBooleanLiteral Keyword
 
 
-" Symbol Literals (SLS 1.3.7) - 'scalaIdentifier and 'scalaOp; placed before Character Literals
+" Symbol Literals (SLS 1.3.7) - placed before Character Literals
 
-syn match scalaSymbolLiteral "'" nextgroup=scalaMixedIdInSymbolLiteral,scalaOpInSymbolLiteral
+syn match scalaSymbolLiteral "'" nextgroup=scalaAlphaMixedIdInSymbolLiteral,scalaOpInSymbolLiteral
 hi def link scalaSymbolLiteral Constant
 
 " following scalac behavior
 syn match scalaSymbolLiteral "'/"   nextgroup=scalaOpInSymbolLiteral
 syn match scalaSymbolLiteral "'/\*" nextgroup=scalaOpInSymbolLiteral
 
-syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*$  contained
-syn match scalaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*_$ nextgroup=scalaOpInMixedIdInSymbolLiteral,@scalaCommentCluster contained
-hi link scalaMixedIdInSymbolLiteral scalaSymbolLiteral
+syn match scalaAlphaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*$  contained
+syn match scalaAlphaMixedIdInSymbolLiteral $[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9][^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`]*_$ nextgroup=scalaOpInAlphaMixedIdInSymbolLiteral,@scalaCommentCluster contained
+hi link scalaAlphaMixedIdInSymbolLiteral scalaSymbolLiteral
 
-syn region scalaOpInSymbolLiteral          start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
-syn region scalaOpInMixedIdInSymbolLiteral start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
+syn region scalaOpInSymbolLiteral               start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
+syn region scalaOpInAlphaMixedIdInSymbolLiteral start="[!#%&*+\-/:<=>?@\\^|~]\+" end=".\@=" end="$" contains=@scalaCommentCluster,@scalaPreParseCluster oneline contained
 
 hi link scalaOpInSymbolLiteral scalaSymbolLiteral
-hi link scalaOpInMixedIdInSymbolLiteral scalaSymbolLiteral
+hi link scalaOpInAlphaMixedIdInSymbolLiteral scalaSymbolLiteral
 
 
 " Character Literals (SLS 1.3.4)
