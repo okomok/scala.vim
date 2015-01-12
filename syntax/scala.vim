@@ -8,7 +8,7 @@
 "   syntax/c.vim
 "   syntax/html.vim
 "   syntax/xml.vim
-"   Stefan Matthias Aust 2006
+"   https://github.com/scala/scala-tool-support/tree/master/tool-support/vim
 "   https://github.com/derekwyatt/vim-scala
 "   http://www.tutorialspoint.com/scala/scala_basic_syntax.htm
 "   http://blog.dieweltistgarnichtso.net/constructing-a-regular-expression-that-matches-uris
