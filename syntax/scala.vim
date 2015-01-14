@@ -211,7 +211,7 @@ syn match scalaUnclosedCharacterLiteralError "'$"
 syn match scalaUnclosedCharacterLiteralError "'\s\@="
 syn match scalaUnclosedCharacterLiteralError "'\\\%(u\+[0-9A-Fa-f]\{4}\)\@!" " optimistic
 hi def link scalaUnclosedCharacterLiteralError scalaSyntaxError
-syn match scalaCharacterLiteral /'\p'/
+syn match scalaCharacterLiteral /'.'/
 syn match scalaCharacterLiteral              /'\%(\\[btnfr"'\\]'\)\@=/
 syn match scalaCharacterLiteral              /\%('\\[btnfr"'\\]\)\@<='/
 syn match scalaCharEscapeInCharacterLiteral /'\@<=\\[btnfr"'\\]'\@=/
