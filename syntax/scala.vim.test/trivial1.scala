@@ -153,7 +153,7 @@ object SingleLineComments {
 }
 
 object MultiLineComments {
-    /*  note: hello */
+    /*  Note: hello */
     /*
     * *  note: hello FIXME
      */

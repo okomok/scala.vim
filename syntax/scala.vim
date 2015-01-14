@@ -164,7 +164,7 @@ hi def link scalaMultiLineComment scalaComment
 " Commentdoc
 syn cluster scalaCommentdocCluster contains=scalaCommentdocTodo,scalaCommentdocTag
 syn keyword scalaCommentdocTodo TODO FIXME XXX contained
-syn match scalaCommentdocTag "\%(\%(/\*\|^\%(\s*\*\)*\|//\)\s*\)\@<=[A-Za-z][A-Za-z0-9+.-]*:\s" contained " like a URI scheme
+syn match scalaCommentdocTag "\%(\%(/\*\|^\%(\s*\*\)*\|//\)\s*\)\@<=[A-Z][A-Za-z0-9+.-]*:\s" contained " like a URI scheme
 hi def link scalaCommentdocTodo Todo
 hi def link scalaCommentdocTag SpecialComment
 
