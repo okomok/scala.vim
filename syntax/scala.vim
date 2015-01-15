@@ -163,10 +163,12 @@ hi def link scalaMultiLineComment scalaComment
 
 " Commentdoc
 syn cluster scalaCommentdocCluster contains=scalaCommentdocTodo,scalaCommentdocTag
-syn keyword scalaCommentdocTodo TODO FIXME XXX contained
-syn match scalaCommentdocTag "\%(\%(/\*\|^\%(\s*\*\)*\|//\)\s*\)\@<=[A-Z][A-Za-z0-9+.-]*:\s" contained " like a URI scheme
+syn keyword scalaCommentdocTodo TODO FIXME XXX nextgroup=scalaCommentdocTagDelimiter contained
+syn match scalaCommentdocTag "\%(\%(/\*\|^\%(\s*\*\)*\|//\)\s*\)\@<=[A-Z][A-Za-z0-9+.-]*:\s\@=" contained " like a URI scheme
+syn match scalaCommentdocTagDelimiter ":" contained
 hi def link scalaCommentdocTodo Todo
 hi def link scalaCommentdocTag SpecialComment
+hi def link scalaCommentdocTagDelimiter scalaCommentdocTag
 
 
 " Integer Literals (SLS 1.3.1)

@@ -148,8 +148,9 @@ object SingleLineComments {
 
     val z = 'fa+ 3 // ' fa + 3 comment
     val k = "fa + 3 // " fa + 3 // no comment
-    // NOTE: HELLO FIXME
+    // TODO: NotATag: HELLO FIXME
     //note: hello
+    // Tag: hello
 }
 
 object MultiLineComments {
