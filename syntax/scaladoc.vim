@@ -76,7 +76,7 @@ syn region scaladocSubscript start=",," end=",,,\@!" contains=@scaladocPreParseC
 hi def link scaladocSubscript scaladocInlineElement
 syn region scaladocEntityLink start="\[\[" end="\]\]" contains=@scaladocPreParseCluster contained keepend
 hi def link scaladocEntityLink scaladocInlineElement
-syn region scaladocExternalLink matchgroup=scaladocInlineElement start="\[\[\%([A-Za-z][A-Za-z0-9+.-]*:\)\@=" end="\(\s.*\)\=\]\]" contains=@scaladocPreParseCluster,scaladocUri contained keepend
+syn region scaladocExternalLink matchgroup=scaladocInlineElement start="\[\[\%([A-Za-z][A-Za-z0-9+.-]*:\)\@=" end="\(\s.*\)\=\]\]" contains=@scaladocPreParseCluster contained keepend
 hi def link scaladocExternalLink Underlined
 
 " Start of Block Elements, Tags or Annotations
@@ -134,7 +134,7 @@ syn match scaladocUsecase "\%(\s*\)\@<=@usecase\>" contained
 hi def link scaladocUsecase scaladocTagCluster
 syn match scaladocAuthor "\%(\s*\)\@<=@author\>" contained
 hi def link scaladocAuthor scaladocTagCluster
-syn match scaladocVersion "\%(\s*\)\@<=@version\>"  contained
+syn match scaladocVersion "\%(\s*\)\@<=@version\>" contained
 hi def link scaladocVersion scaladocTagCluster
 syn match scaladocSince "\%(\s*\)\@<=@since\>" contained
 hi def link scaladocSince scaladocTagCluster
