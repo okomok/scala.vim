@@ -276,8 +276,8 @@ if !exists("scala_no_scaladoc")
 endif
 
 " XML mode (SLS 1.5)
-syn cluster xmlRegionHook contains=scalaEscapedBlock
-syn cluster xmlStartTagHook contains=scalaEscapedBlock
+syn cluster xmlRegionHook add=scalaEscapedBlock
+syn cluster xmlStartTagHook add=scalaEscapedBlock
 syn match scalaXmlMode _[ \t({]\%(<[^ \t()[\]{}.;,!#%&*+\-/:<=>?@\\^|~'"`0-9]\)\@=_ nextgroup=@scalaXml
 
 

@@ -16,9 +16,10 @@ endif
 
 " Includes
 
-if exists("scaladoc_has_html")
+if !exists("scaladoc_no_html")
     syntax case ignore
     syntax include @scaladocHtml syntax/html.vim
+    syn cluster htmlPreProc add=@scaladocPreParseCluster
     unlet b:current_syntax
 endif
 

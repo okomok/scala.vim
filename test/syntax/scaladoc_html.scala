@@ -13,3 +13,10 @@
  * <.
  */
 def hello = 0
+
+/**
+  * <a href="hello"> hell
+  * o </a>
+  */
+object hello {
+}
