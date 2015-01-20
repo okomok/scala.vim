@@ -96,17 +96,17 @@ hi link scaladocLeftMerginal scaladocLeftMergin
 
 " Scaladoc Block Elements (https://wiki.scala-lang.org/display/SW/Syntax)
 
-syn cluster scaladocBlockElementCluster contains=scaladocListBlockStart,scaladocHeading
+syn cluster scaladocBlockElementCluster contains=scaladocListItemStart,scaladocHeading
 hi def link scaladocBlockElementQuote SpecialComment
 
 syn region scaladocHeading matchgroup=scaladocHeadingQuote start="\s*\z(=\+\)" end="\z1" contains=@scaladocBodyCluster contained keepend 
 hi def link scaladocHeadingQuote scaladocBlockElementQuote
 hi def link scaladocHeading scaladoc
 
-syn match scaladocListBlockStart "\s\+-\s" contained
-" syn match scaladocListBlockStart "\s\+[0-9]\.\s" contained " not implemented?
-hi link scaladocListBlockStart scaladocListBlockQuote 
-hi def link scaladocListBlockQuote scaladocBlockElementQuote
+syn match scaladocListItemStart "\s\+-\s" contained
+" syn match scaladocListItemStart "\s\+[0-9]\.\s" contained " not implemented?
+hi link scaladocListItemStart scaladocListItemQuote 
+hi def link scaladocListItemQuote scaladocBlockElementQuote
 
 
 " Scaladoc Code Block
