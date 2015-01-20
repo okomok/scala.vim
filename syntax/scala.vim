@@ -271,7 +271,6 @@ hi def link scalaStandardType Type
 " Scaladoc
 if !exists("scala_no_scaladoc")
     syn cluster scaladocIdHook contains=scalaAlphaId,scalaMixedId,scalaOp,scalaReservedOp,scalaLiteralId
-    syn cluster scaladocMultiLineCommentHook contains=scalaMultiLineComment
     runtime! syntax/scaladoc.vim
     unlet b:current_syntax
 endif

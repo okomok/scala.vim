@@ -1,3 +1,8 @@
+/**
+ * /*i*/
+ */
+def i
+
 
 /***/
 /**/
@@ -5,9 +10,9 @@ def closed() = 0
 
 
 /**
- * z ,,abc,,, // woh?
+ * z ,,abc,,, 
  * z __abc__
- * z ___abc___ de
+ * z ___abc___de
  * z ''abc''
  * z '''abc'''
  * z ''''abc''''
@@ -25,9 +30,9 @@ def closed() = 0
  */
 def nested() = 0
 
-/**
+/**@define P b
  * @define COLL a
- * @throws My.T hello $COLL
+ *@throws My.T hello $COLL
  * @usecase def hello(): a $COLL a$COLL
  * @usecase def hello(val k = "$COLL what"): Int 
  * {{{
@@ -41,10 +46,9 @@ def hello = ()
 def ok()
 
 
-// FIXME
 /**
  * {{{
- *     " */ "
+ *     " */ "this is uncolsed string literal!
  * }}}
  */
 def hello = ()
@@ -81,12 +85,12 @@ def hello = 3 * 2
 def nested() = 0
 
 /**
- * /*i */
+ * /*i*/
 */
 def nested() = 0
 
     /**
-     * @param i hello /* nested */
+     * @param i hello /* TODO: not a todo; this is doc! */
      *i/**
      *   @param i hello // not a scaladoc
      *   hello
@@ -96,7 +100,7 @@ def nested() = 0
      **/
     def hello() = 0
 
-/** ==hello==
+/**==hello==
  * ===hello `world` {{{ throw new () }}} ===
  **
  *  - one
@@ -107,8 +111,8 @@ def nested() = 0
  *      A. a {{{ val i = 3 }}}
  *      B. b
  *px
- * - should be a list 
- * - should be a list
+ * - should not be a list 
+ * - should not be a list
  * 
  */
 def hello = ()
@@ -209,6 +213,9 @@ def hello() }}}
   * val x: Int = 3 * 3}}}
   */
 def hello() = x * 3
+
+/** - hello
+ */
 
 /** @param i hello
  */

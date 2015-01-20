@@ -28,11 +28,11 @@ endif
 syn case match
 syn sync minlines=200 maxlines=1000
 
-
-syn match scaladocStart "/\*\*\@=" nextgroup=scaladoc
-syn region scaladoc start="\*\@<=" end="\*/" contains=@scaladocBodyCluster keepend fold contained
-hi link scaladocStart scaladoc
+" eat some; otherwise eaten up by nested multi-line comment.
+syn match scaladoc "/\%(\*\*\)\@=" nextgroup=scaladocBody
+syn region scaladocBody start="\*" end="\*/" contains=@scaladocBodyCluster keepend fold contained
 hi def link scaladoc Comment
+hi link scaladocBody scaladoc
 syn cluster scaladocBodyCluster contains=scaladocLeftMerginal,scaladocCodeBlock,@scaladocInlineElementCluster,@scaladocPreParseCluster,
     \ @scaladocHtml,@Spell,scaladocNotHtml
 
@@ -49,7 +49,9 @@ endif
 
 
 " Before parsing
-syn cluster scaladocPreParseCluster contains=scaladocEscape,@scaladocMultiLineCommentHook,scaladocLeftMergin
+syn cluster scaladocPreParseCluster contains=scaladocEscape,scaladocMultiLineComment,scaladocLeftMergin
+syn region scaladocMultiLineComment start="/\*" end="\*/" contains=scaladocMultiLineComment keepend extend contained
+hi def link scaladocMultiLineComment scaladoc
 
 " Scaladoc Escape
 "   $scalaEscapedId seems good.
@@ -78,8 +80,11 @@ syn region scaladocExternalLink matchgroup=scaladocInlineElement start="\[\[\%([
 hi def link scaladocExternalLink Underlined
 
 " Start of Block Elements, Tags or Annotations
-syn match scaladocLeftMerginal "^\s*\*\%(\s\+\|$\)" nextgroup=@scaladocLeftMerginalCluster contained
-syn match scaladocLeftMerginal "\%(/\*\*\)\@<=\s\+" nextgroup=@scaladocLeftMerginalCluster contained " bless you.
+syn match scaladocLeftMerginal "^" nextgroup=@scaladocLeftMerginalCluster contained " fallback
+syn match scaladocLeftMerginal "^\s*\*\s" nextgroup=@scaladocLeftMerginalCluster contained
+syn match scaladocLeftMerginal "\%(/\*\)\@<=\*\s" nextgroup=@scaladocLeftMerginalCluster contained
+syn match scaladocLeftMerginal "^\s*\*[^ \t]\@=" nextgroup=@scaladocLeftMerginalCluster contained
+syn match scaladocLeftMerginal "\%(/\*\)\@<=\*[^ \t]\@=" nextgroup=@scaladocLeftMerginalCluster contained
 syn cluster scaladocLeftMerginalCluster contains=@scaladocTagCluster,@scaladocBlockElementCluster
 hi link scaladocLeftMerginal scaladocLeftMergin
 
@@ -89,12 +94,12 @@ hi link scaladocLeftMerginal scaladocLeftMergin
 syn cluster scaladocBlockElementCluster contains=scaladocListBlockStart,scaladocHeading
 hi def link scaladocBlockElementCluster SpecialComment
 
-syn region scaladocHeading matchgroup=scaladocHeadingQuote start="=\+" end="=\+" contains=@scaladocBodyCluster contained keepend oneline
+syn region scaladocHeading matchgroup=scaladocHeadingQuote start="\s*\z(=\+\)" end="\z1" contains=@scaladocBodyCluster contained keepend 
 hi def link scaladocHeadingQuote SpecialComment
 hi def link scaladocHeading scaladoc
 
-syn match scaladocListBlockStart "-\s" contained
-syn match scaladocListBlockStart "[0-9]\.\s" contained
+syn match scaladocListBlockStart "\s\+-\s" contained
+" syn match scaladocListBlockStart "\s\+[0-9]\.\s" contained " not implemented?
 hi def link scaladocListBlockStart SpecialComment
 
 
@@ -109,35 +114,35 @@ syn cluster scaladocTagCluster contains=scaladocParam,scaladocTParam,scaladocRet
     \ scaladocNote,scaladocExample,scaladocUsecase,scaladocAuthor,scaladocVersion,scaladocSince,scaladocTodo,scaladocDefine,scaladocInheritdoc
 hi def link scaladocTagCluster SpecialComment
 
-syn match scaladocParam "@constructor\>" contained 
+syn match scaladocParam "\s*@constructor\>" contained 
 hi def link scaladocParam scaladocTagCluster
-syn match scaladocParam "@param\>" nextgroup=@scaladocIdHook contained skipwhite
+syn match scaladocParam "\s*@param\>" nextgroup=@scaladocIdHook contained skipwhite
 hi def link scaladocParam scaladocTagCluster
-syn match scaladocTParam "@tparam\>" nextgroup=@scaladocIdHook contained skipwhite
+syn match scaladocTParam "\s*@tparam\>" nextgroup=@scaladocIdHook contained skipwhite
 hi def link scaladocTParam scaladocTagCluster
-syn match scaladocReturn "@return\>" contained
+syn match scaladocReturn "\s*@return\>" contained
 hi def link scaladocReturn scaladocTagCluster
-syn match scaladocThrows "@throws\>" contained
+syn match scaladocThrows "\s*@throws\>" contained
 hi def link scaladocThrows scaladocTagCluster
-syn match scaladocSee "@see\>" contained
+syn match scaladocSee "\s*@see\>" contained
 hi def link scaladocSee scaladocTagCluster
-syn match scaladocNote "@note\>" contained
+syn match scaladocNote "\s*@note\>" contained
 hi def link scaladocNote scaladocTagCluster
-syn match scaladocExample "@example\>" contained
+syn match scaladocExample "\s*@example\>" contained
 hi def link scaladocExample scaladocTagCluster
-syn match scaladocUsecase "@usecase\>" contained
+syn match scaladocUsecase "\s*@usecase\>" contained
 hi def link scaladocUsecase scaladocTagCluster
-syn match scaladocAuthor "@author\>" contained
+syn match scaladocAuthor "\s*@author\>" contained
 hi def link scaladocAuthor scaladocTagCluster
-syn match scaladocVersion "@version\>"  contained
+syn match scaladocVersion "\s*@version\>"  contained
 hi def link scaladocVersion scaladocTagCluster
-syn match scaladocSince "@since\>" contained
+syn match scaladocSince "\s*@since\>" contained
 hi def link scaladocSince scaladocTagCluster
-syn match scaladocTodo "@todo\>" contained
+syn match scaladocTodo "\s*@todo\>" contained
 hi def link scaladocTodo scaladocTagCluster
-syn match scaladocDefine "@define\>" nextgroup=scaladocEscapedId contained skipwhite
+syn match scaladocDefine "\s*@define\>" nextgroup=scaladocEscapedId contained skipwhite
 hi def link scaladocDefine scaladocTagCluster
-syn match scaladocInheritdoc "@inheritdoc\>"
+syn match scaladocInheritdoc "\s*@inheritdoc\>"
 hi def link scaladocInheritdoc scaladocTagCluster
 
 
