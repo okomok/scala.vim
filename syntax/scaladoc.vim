@@ -37,10 +37,13 @@ hi link scaladocBody scaladoc
 syn cluster scaladocBodyCluster contains=scaladocLeftMerginal,scaladocCodeBlock,@scaladocInlineElementCluster,@scaladocPreParseCluster,
     \ @scaladocHtml,@Spell,scaladocNotHtml
 
-syn match scaladocLeftMergin "^\s*\*\%(\s\+\|$\)" contained " fallback
+" fallback
+syn match scaladocLeftMergin "^" contained
+syn match scaladocLeftMergin "^\s*\*\s" contained
+syn match scaladocLeftMergin "^\s*\*[^ \t]\@=" contained
 hi link scaladocLeftMergin scaladoc
 
-if exists("scaladoc_has_html")
+if !exists("scaladoc_no_html")
     " suppress @scaladocHtml errors.
     syn match scaladocNotHtml ">\@=" contained
     syn match scaladocNotHtml "\%(&\%(#\=[0-9A-Za-z]\{1,8};\)\@!\)\@=" contained

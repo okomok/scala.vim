@@ -219,7 +219,7 @@ def hello() = x * 3
 /** - hello
  */
 
-/** @param i hello
+/**@param i hello
  */
 
    /** @param i hello
@@ -255,7 +255,7 @@ class A {
   * The function f defined in $THIS returns some integer without no special property. (previously defined in $PARENT)
   * @param i An ignored parameter.
   * @return The value $RESULT.
-  * @tparams
+  * @tparamZ
   */
  def f(i: Int) = 3
 }
