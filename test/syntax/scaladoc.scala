@@ -17,6 +17,8 @@ def closed() = 0
  * z '''abc'''
  * z ''''abc''''
  * z '''''abc'''''
+ * z @param <- not a tag
+ * __ hello __
  * closed
  */
 
