@@ -41,6 +41,7 @@ syn cluster scaladocBodyCluster contains=scaladocLeftMerginal,scaladocCodeBlock,
 syn match scaladocLeftMergin "^" contained
 syn match scaladocLeftMergin "^\s*\*\s" contained
 syn match scaladocLeftMergin "^\s*\*[^ \t]\@=" contained
+syn match scaladocLeftMergin "^\s*\*$" contained
 hi link scaladocLeftMergin scaladoc
 
 if !exists("scaladoc_no_html")
