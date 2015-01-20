@@ -8,7 +8,7 @@
 " Preamble
 
 if version < 600
-    syntax clear
+    syn clear
 elseif exists("b:current_syntax")
     finish
 endif
@@ -17,8 +17,8 @@ endif
 " Includes
 
 if !exists("scaladoc_no_html")
-    syntax case ignore
-    syntax include @scaladocHtml syntax/html.vim
+    syn case ignore
+    syn include @scaladocHtml syntax/html.vim
     syn cluster htmlPreProc add=@scaladocPreParseCluster
     unlet b:current_syntax
 endif

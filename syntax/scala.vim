@@ -16,7 +16,7 @@
 " Preamble
 
 if version < 600
-    syntax clear
+    syn clear
 elseif exists("b:current_syntax")
     finish
 endif
@@ -25,9 +25,9 @@ endif
 " Includes
 
 if exists("scala_has_xmlmode")
-    syntax case match
+    syn case match
     let g:xml_syntax_folding=1 " enables xmlRegion.
-    syntax include @scalaXml syntax/xml.vim
+    syn include @scalaXml syntax/xml.vim
     unlet b:current_syntax
 endif
 
@@ -85,7 +85,7 @@ hi def link scalaLiteralId scalaNonOpId
 " Delimiters
 syn match scalaDelimiter "[()[\]{}.;,]"
 hi def link scalaDelimiter Delimiter
-syntax region scalaBlockExpr matchgroup=scalaDelimiter start="{" end="}" fold contains=TOP
+syn region scalaBlockExpr matchgroup=scalaDelimiter start="{" end="}" fold contains=TOP
 
 " Reserved Words (SLS 1.1)
 syn keyword scalaReservedWord abstract catch class def
